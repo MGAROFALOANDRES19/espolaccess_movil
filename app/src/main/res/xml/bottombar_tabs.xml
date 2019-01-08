@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tabs>
+    <tab
+        id="@+id/maps"
+        title="@string/tab_acceso"
+        icon="@drawable/vector_62"
+        inActiveColor="#00FF00"
+        barColorWhenSelected="#FF0000"
+        badgeBackgroundColor="#FF0000"
+        badgeHidesWhenActive="true"
+        />
+    <tab
+        id="@+id/search"
+        title="@string/tab_search"
+        barColorWhenSelected="@color/colorPrimary"
+        icon="@drawable/vector_63"
+        />
+    <tab
+        id="@+id/challenge"
+        title="@string/tab_challenge"
+        barColorWhenSelected="@color/colorPrimary"
+        icon="@drawable/vector_64"
+        />
+    <tab
+        id="@+id/profile"
+        title="@string/tab_profile"
+        barColorWhenSelected="@color/colorPrimary"
+        icon="@drawable/vector_65"
+        />
+</tabs>

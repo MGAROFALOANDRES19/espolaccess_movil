@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "607525107434",
+    "firebase_url": "https://espolaccess.firebaseio.com",
+    "project_id": "espolaccess",
+    "storage_bucket": "espolaccess.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:607525107434:android:d1be4dba84da1f72",
+        "android_client_info": {
+          "package_name": "com.access.espol.marco77713.espolaccess"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "607525107434-gjuu5lsjb86ov1kv633jouum6hj5bf06.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.access.espol.marco77713.espolaccess",
+            "certificate_hash": "369dca5a0e8fe47083cb46d2fe431f0a01a56b8f"
+          }
+        },
+        {
+          "client_id": "607525107434-4vmbdbnt4dl3kvtt63l3ffgmr0cvkgbl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDoG9jkH5_6Rm2LbLDPV1KsXY8ikyYUqEk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "607525107434-4vmbdbnt4dl3kvtt63l3ffgmr0cvkgbl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

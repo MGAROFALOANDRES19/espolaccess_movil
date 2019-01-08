@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/see"
+    android:layout_height="@dimen/evaluate"
+    android:layout_centerVertical="true"
+    android:layout_centerInParent="true"
+    android:layout_centerHorizontal="true"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    android:background="@drawable/popupbackground">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/askForBuildingEvaluation"
+        android:textSize="20sp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_weight="1"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="bottom"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom|end">
+
+        <Button
+            android:id="@+id/see"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:text="VER"
+            android:background="@drawable/btn_rounded"
+            android:layout_weight=".5"
+            android:textColor="@android:color/white"
+            />
+        <Button
+            android:id="@+id/evaluate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:text="EVALUAR"
+            android:textColor="@android:color/white"
+            android:background="@drawable/btn_rounded"
+            android:layout_weight=".5"/>
+
+    </LinearLayout>
+
+</LinearLayout>

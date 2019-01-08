@@ -1,3 +1,47 @@
 <resources>
     <string name="app_name">EspolAccess</string>
+    <string name="title_activity_referencia">ReferenciaActivity</string>
+    <string name="hint_username">Usuario</string>
+    <string name="hint_password">Contraseña</string>
+    <string name="btn_login">Iniciar Sesion</string>
+    <string name="dont_have_account">No tienes cuenta?</string>
+    <string name="createaccount">Crea una aqui</string>
+    <string name="hint_email">Correo Electrónico</string>
+    <string name="hint_name">Nombre</string>
+    <string name="hint_confirm_password">Confirmar contraseña</string>
+    <string name="btn_join">Únete</string>
+    <string name="toolbar_title_createaccount">Crear cuenta</string>
+    <string name="username_card">Uriel Ramirez</string>
+    <string name="firstword_card">Hace</string>
+    <string name="timecard_card">4 dias</string>
+    <string name="likeNumber_card">10 Me Gusta</string>
+    <string name="tab_search">Buscar</string>
+    <string name="tab_home">Inicio</string>
+    <string name="tab_profile">Perfil</string>
+    <string name="tab_acceso">Acceso</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="slogan">Disfruta de nuestra app iniciando sesión o registrándote</string>
+    <string name="close">X</string>
+    <string name="hint_search">Buscar</string>
+    <string name="askForBuildingEvaluation">Usted desea ver o evaluar</string>
+    <string name="intro_1_1">Esta aplicación </string>
+    <string name="intro_1_2">informa a las</string>
+    <string name="intro_1_3">personas con discapacidad</string>
+    <string name="intro_1_4">sobre el nivel de accesibilidad</string>
+    <string name="intro_1_5">de los edificios de ESPOL</string>
+    <string name="intro_2_1">Donde la</string>
+    <string name="intro_2_2">comunidad</string>
+    <string name="intro_2_3">politécnica con datos verídicos</string>
+    <string name="intro_2_4">podrá evaluar cada edificio</string>
+    <string name="intro_2_5">de ESPOL</string>
+    <string name="intro_3_1">Por medio de un</string>
+    <string name="intro_3_2">juego donde</string>
+    <string name="intro_3_3">podrá ganar premios</string>
+    <string name="intro_3_4">y/o reconocimientos</string>
+    <string name="account">Cuenta</string>
+    <string name="changePassword">Cambio de contraseña</string>
+    <string name="personalization">Personalización</string>
+    <string name="failed">Vuelva a intentar</string>
+    <string name="tab_challenge">Competencia</string>
 </resources>

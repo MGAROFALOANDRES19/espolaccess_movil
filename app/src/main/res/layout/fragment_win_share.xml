@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".views.fragments.WinShareFragment"
+    android:background="@drawable/vector_94">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <TextView
+        android:id="@+id/txtClose"
+        android:layout_width="@dimen/close"
+        android:layout_height="@dimen/close"
+        android:textColor="@android:color/white"
+        android:text="@string/close"
+        android:textStyle="bold"
+        android:layout_gravity="end"
+        android:gravity="center"
+        android:background="@drawable/btn_rounded" />
+
+    <TextView
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:text="Has consegido un edificio mas, comparte tu logro en..."
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_marginTop="-80dp"
+        android:layout_marginLeft="30dp"
+        android:textSize="20sp"
+        android:textColor="@android:color/white"/>
+
+</FrameLayout>
