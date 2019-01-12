@@ -73,7 +73,8 @@ public class EvaluationActivity extends AppCompatActivity {
 
     public void prevAction(View view) {
         btnPrev = (Button) findViewById(R.id.prev);
-        if(btnPrev.getText() == "Cancelar"){
+        if(btnPrev.getTag().equals("Cancelar")){
+            System.out.println("PILAS");
             startActivity(new Intent(EvaluationActivity.this, ContainerActivity.class));
         }
 

@@ -21,6 +21,7 @@ import com.access.espol.marco77713.espolaccess.R;
 import com.access.espol.marco77713.espolaccess.model.User;
 import com.access.espol.marco77713.espolaccess.views.fragments.ChallengeFragment;
 import com.access.espol.marco77713.espolaccess.views.fragments.MapFragment;
+import com.access.espol.marco77713.espolaccess.views.fragments.MapsActivity;
 import com.access.espol.marco77713.espolaccess.views.fragments.ProfileFragment;
 import com.access.espol.marco77713.espolaccess.views.fragments.SearchFragment;
 import com.google.firebase.auth.FirebaseAuth;
@@ -60,6 +61,7 @@ public class ContainerActivity extends AppCompatActivity {
     MapFragment mapFragment = new MapFragment();
     ProfileFragment profileFragment = new ProfileFragment(mAuth);
     SearchFragment searchFragment = new SearchFragment();
+    MapsActivity mapsActivity = new MapsActivity();
 
     @Override
     protected void onStart() {
@@ -100,11 +102,13 @@ public class ContainerActivity extends AppCompatActivity {
             public void onTabSelected(int tabId) {
                 switch (tabId) {
                     case R.id.challenge:
-                        changeFragment(challengeFragment);
+                        //changeFragment(challengeFragment);
 
                         break;
                     case R.id.maps:
-                        getPuntos();
+                        //getPuntos();
+                        //MapsActivity mapsActivity = new MapsActivity();
+                        //changeFragment(mapsActivity);
 
                         break;
                     case R.id.search:
@@ -120,6 +124,8 @@ public class ContainerActivity extends AppCompatActivity {
 
 
         }
+
+
 
     private void changeFragment(Fragment challengeFragment) {
         getSupportFragmentManager().beginTransaction().replace(R.id.container, challengeFragment)

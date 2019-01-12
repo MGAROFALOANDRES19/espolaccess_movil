@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.access.espol.marco77713.espolaccess.views.ContainerActivity;
 import com.access.espol.marco77713.espolaccess.views.CreateAccountActivity;
+import com.access.espol.marco77713.espolaccess.views.fragments.MapsActivity;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -56,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
         //check the current user - EVALUA SI ALGUIEN YA ESTA LOGGEADO
         if (mAuth.getCurrentUser() != null) {
-            startActivity(new Intent(MainActivity.this, ContainerActivity.class));
+            startActivity(new Intent(MainActivity.this, MapsActivity.class));
             finish();
         }
 
