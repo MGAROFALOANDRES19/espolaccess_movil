@@ -4,8 +4,8 @@
     <string name="hint_username">Usuario</string>
     <string name="hint_password">Contraseña</string>
     <string name="btn_login">Iniciar Sesion</string>
-    <string name="dont_have_account">No tienes cuenta?</string>
-    <string name="createaccount">Crea una aqui</string>
+    <string name="dont_have_account">¿No tienes cuenta? </string>
+    <string name="createaccount">Crea una aquí</string>
     <string name="hint_email">Correo Electrónico</string>
     <string name="hint_name">Nombre</string>
     <string name="hint_confirm_password">Confirmar contraseña</string>
@@ -24,7 +24,7 @@
     <string name="slogan">Disfruta de nuestra app iniciando sesión o registrándote</string>
     <string name="close">X</string>
     <string name="hint_search">Buscar</string>
-    <string name="askForBuildingEvaluation">Usted desea ver o evaluar</string>
+    <string name="askForBuildingEvaluation">Usted desea</string>
     <string name="intro_1_1">Esta aplicación </string>
     <string name="intro_1_2">informa a las</string>
     <string name="intro_1_3">personas con discapacidad</string>
@@ -44,4 +44,8 @@
     <string name="personalization">Personalización</string>
     <string name="failed">Vuelva a intentar</string>
     <string name="tab_challenge">Competencia</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="correoEspol">demo@espol.edu.ec</string>
+    <string name="see">VER</string>
+    <string name="evaluate">EVALUAR</string>
 </resources>

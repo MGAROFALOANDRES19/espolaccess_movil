@@ -14,7 +14,14 @@ import com.access.espol.marco77713.espolaccess.R;
 import com.access.espol.marco77713.espolaccess.adapter.PositionAdapter;
 import com.access.espol.marco77713.espolaccess.adapter.SearcherAdapter;
 import com.access.espol.marco77713.espolaccess.model.BuildRow;
+import com.access.espol.marco77713.espolaccess.model.Edificio;
 import com.access.espol.marco77713.espolaccess.model.Posicion;
+import com.access.espol.marco77713.espolaccess.model.User;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +33,12 @@ public class ChallengeFragment extends Fragment {
 
 
     private List<Posicion> posicionsList = new ArrayList<>();
+    private List<User> usersList = new ArrayList<>();
     private RecyclerView recyclerView;
     private PositionAdapter pAdapter;
+
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference myRef = database.getReference("users");
 
 
     public ChallengeFragment() {
@@ -44,26 +55,44 @@ public class ChallengeFragment extends Fragment {
 
         recyclerView = (RecyclerView) view.findViewById(R.id.positions);
 
-        pAdapter = new PositionAdapter(posicionsList);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(pAdapter);
 
-        preparePositionsData();
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                for (DataSnapshot snap: dataSnapshot.getChildren()) {
+                    User user = snap.getValue(User.class);
+                    usersList.add(user);
+                    System.out.println("Value is: " + user);
+                }
+
+                prepareUsersData();
+
+                pAdapter = new PositionAdapter(posicionsList);
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+                recyclerView.setLayoutManager(mLayoutManager);
+                recyclerView.setItemAnimator(new DefaultItemAnimator());
+                recyclerView.setAdapter(pAdapter);
+
+            }
+
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                System.out.println("Failed to read value." + error.toException());
+            }
+        });
 
         return view;
     }
 
-    private void preparePositionsData() {
 
-        Posicion posicion = new Posicion(1, "Mercedes Baque", 45);
-        posicionsList.add(posicion);
-
-        posicion = new Posicion(1, "Marco Garofalo", 95);
-        posicionsList.add(posicion);
-
-
+    private void prepareUsersData() {
+        for(User user:usersList){
+            posicionsList.add(new Posicion(user.getLugar(), user.getEmail(), user.getPuntos()));
+        }
     }
 
 }

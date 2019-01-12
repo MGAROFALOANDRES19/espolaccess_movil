@@ -17,6 +17,8 @@ import com.access.espol.marco77713.espolaccess.R;
 import com.access.espol.marco77713.espolaccess.views.BuildingActivity;
 import com.access.espol.marco77713.espolaccess.views.EvaluationActivity;
 
+import java.util.ArrayList;
+
 import static com.access.espol.marco77713.espolaccess.R.layout.see_or_evaluate;
 
 /**
@@ -25,7 +27,8 @@ import static com.access.espol.marco77713.espolaccess.R.layout.see_or_evaluate;
 public class MapFragment extends Fragment implements  View.OnClickListener{
 
     Dialog myDialog;
-
+    public ArrayList<String> edificios_evaluados = new ArrayList<>();
+    public String edificio = "EDCOM";
     public MapFragment() {
         // Required empty public constructor
     }
@@ -50,6 +53,7 @@ public class MapFragment extends Fragment implements  View.OnClickListener{
     @Override
     public void onClick(View v) {
         Button btn1, btn2;
+
         if (v.getId() == R.id.map){
             myDialog.setContentView(see_or_evaluate);
             btn1 = (Button) myDialog.findViewById(R.id.see);
@@ -59,11 +63,16 @@ public class MapFragment extends Fragment implements  View.OnClickListener{
                 public void onClick(View v) {
 
                     Intent intent = new Intent(myDialog.getContext(), BuildingActivity.class);
+                    intent.putExtra("edificio", edificio);
                     startActivity(intent);
 
                     myDialog.dismiss();
                 }
             });
+
+            if (this.edificios_evaluados.contains(edificio)){
+                btn2.setEnabled(false);
+            }
 
             btn2.setOnClickListener(new View.OnClickListener() {
                 @Override

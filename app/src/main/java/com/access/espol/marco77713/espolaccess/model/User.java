@@ -5,18 +5,22 @@ import java.util.ArrayList;
 public class User {
     private int puntos;
     private int lugar;
-    private int edificios_evaluados;
-    private ArrayList<Respuesta> respuestas;
+    private ArrayList<String> edificios_evaluados;
+    private ArrayList<Pregunta> respuestas;
     private String email;
     private int personalizacion; //0,1,2
 
     public User(String email, int personalizacion) {
         this.puntos = 5;
         this.lugar = 1;
-        this.edificios_evaluados = 5;
+        this.edificios_evaluados = new ArrayList<>();
         this.respuestas = null;
         this.email = email;
         this.personalizacion = personalizacion;
+    }
+
+    public User(){
+
     }
 
     public int getPuntos() {
@@ -35,19 +39,19 @@ public class User {
         this.lugar = lugar;
     }
 
-    public int getEdificios_evaluados() {
+    public ArrayList<String> getEdificios_evaluados() {
         return edificios_evaluados;
     }
 
-    public void setEdificios_evaluados(int edificios_evaluados) {
+    public void setEdificios_evaluados(ArrayList<String> edificios_evaluados) {
         this.edificios_evaluados = edificios_evaluados;
     }
 
-    public ArrayList<Respuesta> getRespuestas() {
+    public ArrayList<Pregunta> getRespuestas() {
         return respuestas;
     }
 
-    public void setRespuestas(ArrayList<Respuesta> respuestas) {
+    public void setRespuestas(ArrayList<Pregunta> respuestas) {
         this.respuestas = respuestas;
     }
 

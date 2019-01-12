@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".views.fragments.WinShareFragment"
-    android:background="@drawable/vector_94">
+    android:background="@drawable/app11_09">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -19,15 +19,5 @@
         android:gravity="center"
         android:background="@drawable/btn_rounded" />
 
-    <TextView
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:text="Has consegido un edificio mas, comparte tu logro en..."
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:layout_marginTop="-80dp"
-        android:layout_marginLeft="30dp"
-        android:textSize="20sp"
-        android:textColor="@android:color/white"/>
 
 </FrameLayout>

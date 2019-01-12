@@ -1,5 +1,6 @@
 package com.access.espol.marco77713.espolaccess.views;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -16,21 +17,27 @@ import com.google.firebase.database.ValueEventListener;
 public class BuildingActivity extends AppCompatActivity {
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference myRef = database.getReference("edificios/EDCOM");
+
+    DatabaseReference myRef;
 
     TextView txtResultado, txtAscensor, txtBanos, txtParqueaderos, txtRampas;
+
+    String edificio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_building);
 
-        this.txtResultado = (TextView) findViewById(R.id.resultado_accesibilidad);
-        this.txtAscensor = (TextView) findViewById(R.id.ascensor);
-        this.txtBanos = (TextView) findViewById(R.id.banos_discapacidad);
-        this.txtParqueaderos = (TextView) findViewById(R.id.parqueaderos);
-        this.txtRampas = (TextView) findViewById(R.id.rampas);
+        Intent intent = getIntent();
+        edificio = intent.getStringExtra("edificio");
 
+
+        this.setViews();
+
+
+        //DATABASE CALL AND WRITTING
+        myRef = database.getReference("edificios/" + edificio);
         myRef.addValueEventListener(new ValueEventListener() {
 
             @Override
@@ -56,6 +63,14 @@ public class BuildingActivity extends AppCompatActivity {
 
 
         showToolbar("EDCOM", true);
+    }
+
+    private void setViews() {
+        this.txtResultado = (TextView) findViewById(R.id.resultado_accesibilidad);
+        this.txtAscensor = (TextView) findViewById(R.id.ascensor);
+        this.txtBanos = (TextView) findViewById(R.id.banos_discapacidad);
+        this.txtParqueaderos = (TextView) findViewById(R.id.parqueaderos);
+        this.txtRampas = (TextView) findViewById(R.id.rampas);
     }
 
 

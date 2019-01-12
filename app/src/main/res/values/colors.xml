@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#FFFDE7</color>
+    <color name="colorPrimary">#fff9d9</color>
     <color name="colorPrimaryDark">#616161</color>
-    <color name="colorAccent">#DD2C00</color>
+    <color name="colorAccent">#ed553b</color>
     <color name="colorAccentLow">#F4511E</color>
-    <color name="editTextColorBlue">#9E9E9E</color>
+    <color name="editTextColorBlue">#112f41</color>
     <color name="backgroundText_card">#53292929</color>
 </resources>

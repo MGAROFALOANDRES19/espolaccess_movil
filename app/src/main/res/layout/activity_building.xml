@@ -35,7 +35,9 @@
                 android:textSize="20sp"
                 android:paddingLeft="15dp"
                 android:gravity="bottom"
-                android:layout_alignBottom="@+id/logo"/>
+                android:layout_alignBottom="@+id/logo"
+                android:paddingTop="@dimen/padding_drawable"
+                android:paddingBottom="@dimen/padding_drawable"/>
         </RelativeLayout>
     <ScrollView
         android:layout_width="match_parent"

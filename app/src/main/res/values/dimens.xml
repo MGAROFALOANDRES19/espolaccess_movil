@@ -21,6 +21,8 @@
     <dimen name="close">30dp</dimen>
     <dimen name="strokeClose">2dp</dimen>
     <dimen name="see">300dp</dimen>
-    <dimen name="evaluate">200dp</dimen>
+    <dimen name="evaluate">175dp</dimen>
     <dimen name="textAsk">16sp</dimen>
+    <dimen name="titlesLogin">20sp</dimen>
+    <dimen name="marginLogin">25dp</dimen>
 </resources>

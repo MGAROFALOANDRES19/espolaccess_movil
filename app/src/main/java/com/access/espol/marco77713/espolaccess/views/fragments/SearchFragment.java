@@ -19,7 +19,13 @@ import com.access.espol.marco77713.espolaccess.R;
 import com.access.espol.marco77713.espolaccess.adapter.PositionAdapter;
 import com.access.espol.marco77713.espolaccess.adapter.SearcherAdapter;
 import com.access.espol.marco77713.espolaccess.model.BuildRow;
+import com.access.espol.marco77713.espolaccess.model.Edificio;
 import com.access.espol.marco77713.espolaccess.model.Posicion;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +37,13 @@ public class SearchFragment extends Fragment  implements SearchView.OnQueryTextL
 
 
     private List<BuildRow> buildRowsList = new ArrayList<>();
+    private List<Edificio> edificioList = new ArrayList<>();
     private RecyclerView recyclerView;
     private SearcherAdapter sAdapter;
+
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference myRef = database.getReference("edificios");
+
 
     public SearchFragment() {
         // Required empty public constructor
@@ -45,27 +56,46 @@ public class SearchFragment extends Fragment  implements SearchView.OnQueryTextL
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_search, container, false);
 
-        setHasOptionsMenu(true);
-
         recyclerView = (RecyclerView) view.findViewById(R.id.builds);
 
-        sAdapter = new SearcherAdapter(buildRowsList);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(sAdapter);
+        // Read from the database
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                for (DataSnapshot snap: dataSnapshot.getChildren()) {
+                    Edificio edificio = snap.getValue(Edificio.class);
+                    edificioList.add(edificio);
+                    System.out.println("Value is: " + edificioList);
+                }
+                prepareBuilsData();
 
-        prepareBuilsData();
+                sAdapter = new SearcherAdapter(buildRowsList);
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+                recyclerView.setLayoutManager(mLayoutManager);
+                recyclerView.setItemAnimator(new DefaultItemAnimator());
+                recyclerView.setAdapter(sAdapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                System.out.println("Failed to read value." + error.toException());
+            }
+        });
+
+        setHasOptionsMenu(true);
 
         return view;
     }
 
     private void prepareBuilsData() {
-        BuildRow buildRow = new BuildRow("EDCOM", "Espol - Prosperina");
-        buildRowsList.add(buildRow);
-
-        buildRow = new BuildRow("Biblioteca", "Espol - Prosperina");
-        buildRowsList.add(buildRow);
+        System.out.println("PILAAAAAAAAS");
+        for(Edificio edificio: edificioList){
+            buildRowsList.add(new BuildRow(edificio.getNombre(), String.valueOf(edificio.getResultado_accesibilidad())));
+            System.out.println(buildRowsList);
+        }
     }
 
     @Override

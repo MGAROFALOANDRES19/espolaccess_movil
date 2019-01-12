@@ -22,7 +22,7 @@ public class IntroductionActivity extends AppIntro {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
+//CON ESTO SOLO CORRE UNA VEZ LA ACTIVIDAD
         SharedPreferences pref = getSharedPreferences("ActivityPREF", Context.MODE_PRIVATE);
         if(pref.getBoolean("activity_executed", false)){
             Intent intent = new Intent(IntroductionActivity.this, MainActivity.class);
@@ -34,15 +34,19 @@ public class IntroductionActivity extends AppIntro {
             ed.commit();
         }
 
+
+        //SE ANADEN LOS SLIDES A LA INTRODUCCION
         addSlide(SampleSlide.newInstance(R.layout.intro_1));
         addSlide(SampleSlide.newInstance(R.layout.intro_2));
         addSlide(SampleSlide.newInstance(R.layout.intro_3));
-        addSlide(SampleSlide.newInstance(R.layout.intro_3));
+        addSlide(SampleSlide.newInstance(R.layout.intro_4));
 
         setSkipText("Saltar");
         showSkipButton(false);
         setDoneText("Listo");
 
+
+        //ATENCION CON ESTA LINEA QUE NO ESTA SIRVIENDO
         askForPermissions(new String[]{Manifest.permission.CAMERA}, 1);
 
     }

@@ -7,6 +7,6 @@
     android:layout_gravity="bottom|end"
     android:layout_width="match_parent"
     app:bb_inActiveTabColor="@android:color/white"
-    app:bb_activeTabColor="@android:color/white"
+    app:bb_activeTabColor="@color/colorAccent"
 
     app:bb_tabXmlResource="@xml/bottombar_tabs"/>

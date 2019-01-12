@@ -8,13 +8,29 @@ import android.view.View;
 import android.widget.Button;
 
 import com.access.espol.marco77713.espolaccess.R;
+import com.access.espol.marco77713.espolaccess.model.Pregunta;
 import com.access.espol.marco77713.espolaccess.views.fragments.QuestionFragment;
 import com.access.espol.marco77713.espolaccess.views.fragments.StratFragment;
 import com.access.espol.marco77713.espolaccess.views.fragments.WinShareFragment;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class EvaluationActivity extends AppCompatActivity {
 
     Button btnPrev, btnNext;
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference myRef = database.getReference("preguntas/edificio");
+
+    List<QuestionFragment> questionFragments = new ArrayList<>();
+    QuestionFragment questionFragment;
+
+    int contPreguntas = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +41,33 @@ public class EvaluationActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.container, stratFragment)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .addToBackStack(null).commit();
+
+        myRef.addValueEventListener(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+
+
+
+                for (DataSnapshot snap: dataSnapshot.getChildren()) {
+                    System.out.println("HOLALAAAAAAAAA "+ snap);
+                    Pregunta pregunta = snap.getValue(Pregunta.class);
+                    questionFragment = new QuestionFragment();
+                    questionFragment.pregunta = pregunta;
+
+                    questionFragments.add(questionFragment);
+
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                System.out.println("Failed to read value." + error.toException());
+            }
+        });
 
     }
 
@@ -38,17 +81,35 @@ public class EvaluationActivity extends AppCompatActivity {
 
     public void nextAction(View view) {
         btnNext = (Button) findViewById(R.id.next);
-        if(btnNext.getText().equals("Iniciar")){
+        if(btnNext.getTag().equals("Iniciar")){
 
-            QuestionFragment questionFragment = new QuestionFragment();
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, questionFragment)
+
+            btnNext.setTag("Next");
+            System.out.println(questionFragments.size());
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, questionFragments.get(contPreguntas))
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                     .addToBackStack(null).commit();
-        btnNext.setText("Acabar");
-
+            contPreguntas++;
         }
 
-        else if (btnNext.getText().equals("Acabar")){
+        else if(btnNext.getTag().equals("Next")){
+
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, questionFragments.get(contPreguntas))
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                    .addToBackStack(null).commit();
+
+            if (contPreguntas < questionFragments.size()){
+                btnNext.setTag("Acabar");
+            }
+                contPreguntas++;
+        }
+
+        else if (btnNext.getTag().equals("Acabar")){
+
+            for (QuestionFragment q: questionFragments){
+                System.out.println("RESPUESTA" + q.pregunta.getRespuesta());
+            }
+
             WinShareFragment winShareFragment = new WinShareFragment();
             getSupportFragmentManager().beginTransaction().replace(R.id.container, winShareFragment)
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
