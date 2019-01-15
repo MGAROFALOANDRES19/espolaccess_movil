@@ -24,7 +24,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+
+import static java.util.Collections.*;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -66,6 +70,7 @@ public class ChallengeFragment extends Fragment {
                     usersList.add(user);
                     System.out.println("Value is: " + user);
                 }
+                Collections.sort(usersList);
 
                 prepareUsersData();
 

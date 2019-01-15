@@ -8,16 +8,25 @@
     <include layout="@layout/actionbar_toolbar"
         />
 
-    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:map="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
+
+
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:map="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/bottombar_height"
+            tools:context=".views.fragments.MapsActivity" />
+    <FrameLayout
+        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingBottom="@dimen/bottombar_height"
         android:layout_marginTop="@dimen/bottombar_height"
-        android:layout_marginBottom="@dimen/bottombar_height"
-        tools:context=".views.fragments.MapsActivity" />
+        android:background="@android:color/white">
+    </FrameLayout>
 
     <include layout="@layout/bottom_bar"/>
 </RelativeLayout>

@@ -11,10 +11,12 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -22,6 +24,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.access.espol.marco77713.espolaccess.MainActivity;
@@ -87,7 +90,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private List<Edificio> edificioList = new ArrayList<>();
 
     Dialog myDialog;
-    BottomBar bottomBar;
+    public BottomBar bottomBar;
+
+    SearchFragment searchFragment = new SearchFragment();
 
     @Override
     protected void onStart() {
@@ -121,33 +126,45 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         bottomBar = (BottomBar) findViewById(R.id.bottombar);
         bottomBar.setDefaultTab(R.id.maps);
 
+        final FrameLayout frameLayout = (FrameLayout) findViewById(R.id.container);
 
         bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
             public void onTabSelected(int tabId) {
                 Intent intent = new Intent(MapsActivity.this, ContainerActivity.class);
+                while (i<=1) {
+                    switch (tabId) {
+                        case R.id.challenge:
+                            intent.putExtra("tabSelected", R.id.challenge);
+                            startActivity(intent);
+                            tabId = R.id.maps;
+                            break;
+                        case R.id.maps:
+                            //getPuntos();
+                            //MapsActivity mapsActivity = new MapsActivity();
+                            //changeFragment(mapsActivity);
+                            frameLayout.setVisibility(View.INVISIBLE);
+                            break;
+                        case R.id.search:
+                            frameLayout.setVisibility(View.VISIBLE);
 
-                switch (tabId) {
-                    case R.id.challenge:
-                        intent.putExtra("tabSelected", R.id.challenge);
-                        startActivity(intent);
-                        tabId = R.id.maps;
-                        break;
-                    case R.id.maps:
-                        //getPuntos();
-                        //MapsActivity mapsActivity = new MapsActivity();
-                        //changeFragment(mapsActivity);
-
-                        break;
-                    case R.id.search:
-                        intent.putExtra("tabSelected", R.id.search);
-                        startActivity(intent);
-                        break;
-                    case R.id.profile:
-                        intent.putExtra("tabSelected", R.id.profile);
-                        startActivity(intent);
-                        break;
+                            getSupportFragmentManager().beginTransaction().replace(R.id.container, searchFragment)
+                                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                                    .addToBackStack(null).commit();
+                            /*intent.putExtra("tabSelected", R.id.search);
+                            startActivity(intent);
+                            tabId = R.id.maps;*/
+                            break;
+                        case R.id.profile:
+                            intent.putExtra("tabSelected", R.id.profile);
+                            startActivity(intent);
+                            tabId = R.id.maps;
+                            break;
+                    }
+                    System.out.println("TAB");
+                    i++;
                 }
+                i=0;
             }
 
         });
@@ -306,9 +323,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 btn1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        System.out.println(m.getTitle() + " MARKER");
+
                         Intent intent = new Intent(myDialog.getContext(), BuildingActivity.class);
                         intent.putExtra("edificio", m.getTitle());
+
                         startActivity(intent);
 
                         myDialog.dismiss();
@@ -324,6 +342,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     public void onClick(View v) {
 
                         Intent intent = new Intent(myDialog.getContext(), EvaluationActivity.class);
+                        intent.putExtra("user", mAuth.getCurrentUser().getUid());
                         startActivity(intent);
 
                         myDialog.dismiss();
@@ -367,7 +386,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         double lat = dir.latitude;
                         double lon = dir.longitude; //Metodo para radios cruzados
                         if ((loc.getLatitude() > lat + x1 && lat + x2 > loc.getLatitude()) && (loc.getLongitude() > lon + y1 && lon + y2 > loc.getLongitude())) {
-                            System.out.println("hola");
+                            System.out.println("estoy en el rango");
                             prueba.remove();
                             //Intent in = new Intent(MapsActivity.this, Opcion.class);
                             //startActivity(in);

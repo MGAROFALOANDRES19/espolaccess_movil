@@ -9,6 +9,7 @@ import android.widget.Button;
 
 import com.access.espol.marco77713.espolaccess.R;
 import com.access.espol.marco77713.espolaccess.model.Pregunta;
+import com.access.espol.marco77713.espolaccess.model.Validacion;
 import com.access.espol.marco77713.espolaccess.views.fragments.MapsActivity;
 import com.access.espol.marco77713.espolaccess.views.fragments.QuestionFragment;
 import com.access.espol.marco77713.espolaccess.views.fragments.StratFragment;
@@ -21,7 +22,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class EvaluationActivity extends AppCompatActivity {
 
@@ -31,17 +34,22 @@ public class EvaluationActivity extends AppCompatActivity {
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference myRef;
 
-    DatabaseReference myRef2 = database.getReference("validaciones");
+    DatabaseReference myRef2 = database.getReference();
 
     List<QuestionFragment> questionFragments = new ArrayList<>();
     QuestionFragment questionFragment;
 
     int contPreguntas = 0;
 
+    String currentUser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_evaluation);
+
+        Intent intent = getIntent();
+        currentUser = intent.getStringExtra("user");
 
         StratFragment stratFragment = new StratFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.container, stratFragment)
@@ -55,16 +63,18 @@ public class EvaluationActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-
+                int j = 1;
 
 
                 for (DataSnapshot snap: dataSnapshot.getChildren()) {
                     Pregunta pregunta = snap.getValue(Pregunta.class);
+
                     questionFragment = new QuestionFragment();
                     questionFragment.pregunta = pregunta;
+                    questionFragment.numero_pregunta = j;
 
                     questionFragments.add(questionFragment);
-
+                    j++;
 
                 }
             }
@@ -115,10 +125,15 @@ public class EvaluationActivity extends AppCompatActivity {
         }
 
         else if (btnNext.getTag().equals("Acabar")){
-
+            ArrayList<Integer> respuestas = new ArrayList<Integer>();
             for (QuestionFragment q: questionFragments){
-                System.out.println("RESPUESTA" + q.pregunta.getRespuesta());
+                respuestas.add(q.pregunta.getRespuesta());
             }
+
+            Validacion validacion = new Validacion(currentUser, "ddad", respuestas);
+            myRef2.child("validaciones").child("2").setValue(validacion);
+
+            myRef2.child("users").child(currentUser).child("edificios_evaluados").push().setValue("sfsofskfskfs");
 
             WinShareFragment winShareFragment = new WinShareFragment();
             getSupportFragmentManager().beginTransaction().replace(R.id.container, winShareFragment)

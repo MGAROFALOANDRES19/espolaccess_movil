@@ -77,6 +77,7 @@ public class ProfileFragment extends Fragment {
                     // User is signed in
                     System.out.println("onAuthStateChanged:signed_in:" + user.getUid());
                     System.out.println("Successfully signed in with: " + user.getEmail());
+                    email.setText(user.getEmail());
                 } else {
                     // User is signed out
                     toastMessage("Successfully signed out.");

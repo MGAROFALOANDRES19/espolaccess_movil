@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.access.espol.marco77713.espolaccess.R;
@@ -22,8 +23,10 @@ public class QuestionFragment extends Fragment{
 
     TextView txtQuestion;
     Button btn1, btn2, btn3;
+    ImageView img;
 
     public Pregunta pregunta;
+    public int numero_pregunta;
 
     public QuestionFragment() {
     }
@@ -37,6 +40,17 @@ public class QuestionFragment extends Fragment{
 
         txtQuestion = (TextView) view.findViewById(R.id.question);
         txtQuestion.setText(pregunta.getPregunta());
+
+        img = (ImageView) view.findViewById(R.id.percentage);
+
+        switch (numero_pregunta){
+            case 1:
+                System.out.println("Estamos en la pregunta 1");
+                break;
+            case 2:
+                System.out.println("Estamos en la pregunta 2");
+                break;
+        }
 
         btn1 = (Button) view.findViewById(R.id.ask1);
         btn1.setText(pregunta.getOpcion1());

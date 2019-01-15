@@ -71,7 +71,7 @@ public class SearchFragment extends Fragment  implements SearchView.OnQueryTextL
                 }
                 prepareBuilsData();
 
-                sAdapter = new SearcherAdapter(buildRowsList);
+                sAdapter = new SearcherAdapter(buildRowsList, getContext());
                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
                 recyclerView.setLayoutManager(mLayoutManager);
                 recyclerView.setItemAnimator(new DefaultItemAnimator());

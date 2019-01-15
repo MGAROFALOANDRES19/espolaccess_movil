@@ -1,11 +1,13 @@
 package com.access.espol.marco77713.espolaccess.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-public class User {
+public class User implements Comparable{
     private int puntos;
     private int lugar;
-    private ArrayList<String> edificios_evaluados;
+    private Map<String, String> edificios_evaluados;
     private ArrayList<Pregunta> respuestas;
     private String email;
     private int personalizacion; //0,1,2
@@ -13,8 +15,16 @@ public class User {
     public User(String email, int personalizacion) {
         this.puntos = 5;
         this.lugar = 1;
-        this.edificios_evaluados = new ArrayList<>();
         this.respuestas = null;
+        this.email = email;
+        this.personalizacion = personalizacion;
+    }
+
+    public User(int puntos, int lugar, Map<String, String> edificios_evaluados, ArrayList<Pregunta> respuestas, String email, int personalizacion) {
+        this.puntos = puntos;
+        this.lugar = lugar;
+        this.edificios_evaluados = edificios_evaluados;
+        this.respuestas = respuestas;
         this.email = email;
         this.personalizacion = personalizacion;
     }
@@ -39,11 +49,11 @@ public class User {
         this.lugar = lugar;
     }
 
-    public ArrayList<String> getEdificios_evaluados() {
+    public Map<String, String> getEdificios_evaluados() {
         return edificios_evaluados;
     }
 
-    public void setEdificios_evaluados(ArrayList<String> edificios_evaluados) {
+    public void setEdificios_evaluados(Map<String, String> edificios_evaluados) {
         this.edificios_evaluados = edificios_evaluados;
     }
 
@@ -70,4 +80,13 @@ public class User {
     public void setPersonalizacion(int personalizacion) {
         this.personalizacion = personalizacion;
     }
+
+
+    @Override
+    public int compareTo(Object o) {
+        int compareage=((User)o).getPuntos();
+        /* For Ascending order*/
+        return compareage-this.getPuntos();
+    }
+
 }
