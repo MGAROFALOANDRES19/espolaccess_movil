@@ -9,9 +9,11 @@ import android.widget.Button;
 
 import com.access.espol.marco77713.espolaccess.R;
 import com.access.espol.marco77713.espolaccess.model.Pregunta;
+import com.access.espol.marco77713.espolaccess.views.fragments.MapsActivity;
 import com.access.espol.marco77713.espolaccess.views.fragments.QuestionFragment;
 import com.access.espol.marco77713.espolaccess.views.fragments.StratFragment;
 import com.access.espol.marco77713.espolaccess.views.fragments.WinShareFragment;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,7 +27,11 @@ public class EvaluationActivity extends AppCompatActivity {
 
     Button btnPrev, btnNext;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference myRef = database.getReference("preguntas/edificio");
+
+    private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference myRef;
+
+    DatabaseReference myRef2 = database.getReference("validaciones");
 
     List<QuestionFragment> questionFragments = new ArrayList<>();
     QuestionFragment questionFragment;
@@ -42,6 +48,8 @@ public class EvaluationActivity extends AppCompatActivity {
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .addToBackStack(null).commit();
 
+        myRef = database.getReference("preguntas/edificio");
+
         myRef.addValueEventListener(new ValueEventListener() {
 
             @Override
@@ -51,7 +59,6 @@ public class EvaluationActivity extends AppCompatActivity {
 
 
                 for (DataSnapshot snap: dataSnapshot.getChildren()) {
-                    System.out.println("HOLALAAAAAAAAA "+ snap);
                     Pregunta pregunta = snap.getValue(Pregunta.class);
                     questionFragment = new QuestionFragment();
                     questionFragment.pregunta = pregunta;
@@ -75,7 +82,9 @@ public class EvaluationActivity extends AppCompatActivity {
         btnPrev = (Button) findViewById(R.id.prev);
         if(btnPrev.getTag().equals("Cancelar")){
             System.out.println("PILAS");
-            startActivity(new Intent(EvaluationActivity.this, ContainerActivity.class));
+            this.finish();
+
+            //startActivity(new Intent(EvaluationActivity.this, MapsActivity.class));
         }
 
     }

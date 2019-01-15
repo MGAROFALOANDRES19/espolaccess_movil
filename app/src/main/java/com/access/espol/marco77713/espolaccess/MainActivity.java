@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
                                 if (task.isSuccessful()) {
                                     // there was an error
                                     Log.d(TAG, "signInWithEmail:success");
-                                    Intent intent = new Intent(MainActivity.this, ContainerActivity.class);
+                                    Intent intent = new Intent(MainActivity.this, MapsActivity.class);
                                     startActivity(intent);
                                     finish();
 
@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if (firebaseAuth.getCurrentUser() != null) {
-                    startActivity(new Intent(MainActivity.this, ContainerActivity.class));
+                    startActivity(new Intent(MainActivity.this, MapsActivity.class));
                 }
 
             }

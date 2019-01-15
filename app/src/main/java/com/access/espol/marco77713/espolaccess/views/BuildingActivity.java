@@ -62,7 +62,7 @@ public class BuildingActivity extends AppCompatActivity {
         });
 
 
-        showToolbar("EDCOM", true);
+        showToolbar(edificio, true);
     }
 
     private void setViews() {

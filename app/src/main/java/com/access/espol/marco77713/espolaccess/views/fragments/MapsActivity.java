@@ -1,27 +1,37 @@
 package com.access.espol.marco77713.espolaccess.views.fragments;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
+import com.access.espol.marco77713.espolaccess.MainActivity;
 import com.access.espol.marco77713.espolaccess.R;
-import com.access.espol.marco77713.espolaccess.adapter.SearcherAdapter;
 import com.access.espol.marco77713.espolaccess.model.Edificio;
 import com.access.espol.marco77713.espolaccess.model.Objetos;
+import com.access.espol.marco77713.espolaccess.model.User;
+import com.access.espol.marco77713.espolaccess.views.BuildingActivity;
+import com.access.espol.marco77713.espolaccess.views.ContainerActivity;
+import com.access.espol.marco77713.espolaccess.views.EvaluationActivity;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdate;
@@ -34,17 +44,21 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.roughike.bottombar.BottomBar;
+import com.roughike.bottombar.OnTabSelectListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+import static com.access.espol.marco77713.espolaccess.R.layout.see_or_evaluate;
 
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
     private Marker prueba;
     double x1=-0.000002295;//solo cambiar penultimo digito 115 => 125 OJO 195
@@ -52,23 +66,146 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     double y1=-0.000002295;
     double y2= 0.000002295;
     ArrayList<Objetos> listaobj = new ArrayList<Objetos>();
+    public ArrayList<String> edificios_evaluados = new ArrayList<>();
     private static int RETICION_PERMISO_LOCALIZACION = 101;
     private double lat, lon;
     private String mensaje;
 
+    int i =0;
+
     FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference myRef = database.getReference("edificios");
+    DatabaseReference myRef;
+
+    FirebaseAuth mAuth;
+    FirebaseAuth.AuthStateListener mAuthListener;
+
+
+    private DatabaseReference myRef2;
+
+    User user;
 
     private List<Edificio> edificioList = new ArrayList<>();
 
+    Dialog myDialog;
+    BottomBar bottomBar;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Maps");
+        getSupportActionBar().setBackgroundDrawable(ContextCompat.getDrawable( this, R.drawable.btn_rounded));
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xFFFFFF));
+
+
+        bottomBar = (BottomBar) findViewById(R.id.bottombar);
+        bottomBar.setDefaultTab(R.id.maps);
+
+
+        bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
+            @Override
+            public void onTabSelected(int tabId) {
+                Intent intent = new Intent(MapsActivity.this, ContainerActivity.class);
+
+                switch (tabId) {
+                    case R.id.challenge:
+                        intent.putExtra("tabSelected", R.id.challenge);
+                        startActivity(intent);
+                        tabId = R.id.maps;
+                        break;
+                    case R.id.maps:
+                        //getPuntos();
+                        //MapsActivity mapsActivity = new MapsActivity();
+                        //changeFragment(mapsActivity);
+
+                        break;
+                    case R.id.search:
+                        intent.putExtra("tabSelected", R.id.search);
+                        startActivity(intent);
+                        break;
+                    case R.id.profile:
+                        intent.putExtra("tabSelected", R.id.profile);
+                        startActivity(intent);
+                        break;
+                }
+            }
+
+        });
+
+        //////////////////// LLAMADA A LA BASE DE DATOS 2
+
+        mAuth = FirebaseAuth.getInstance();
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                if (firebaseAuth.getCurrentUser() == null) {
+                    startActivity(new Intent(MapsActivity.this, MainActivity.class));
+                }
+            }
+        };
+
+        myRef2 = database.getReference("users/" + String.valueOf(mAuth.getCurrentUser().getUid()));
+
+        myRef2.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                System.out.println("QUE PASO " + dataSnapshot.getValue());
+                user = dataSnapshot.getValue(User.class);
+                System.out.println(""+user.getEdificios_evaluados());
+                //mapFragment.edificios_evaluados = user.getEdificios_evaluados();
+
+                switch (user.getEdificios_evaluados().size()){
+                    case (0):
+                        getSupportActionBar().setHomeAsUpIndicator(R.drawable.btn_rounded);
+                        break;
+                    case (2):
+                        getSupportActionBar().setHomeAsUpIndicator(R.drawable.icons8_love_24);
+                        break;
+
+
+                }
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                System.out.println("Failed to read value." + error.toException());
+            }
+
+
+
+        });
+
+
+
+
         ////////////////////LLAMADA A LA BASE DE DATOS
 
+        myRef = database.getReference("edificios");;
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -91,7 +228,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
 
 
-
+        myDialog = new Dialog(this);
 
         miUbicacion();
 
@@ -110,13 +247,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             //Dialog mjs = GooglePlayServicesUtil.getErrorDialog(estado, (Activity) getApplicationContext(), 10);
             //mjs.show();
         }
+
+
     }
     private void llenarUbicacion(){
 
-        System.out.println(edificioList);
-
         for(Edificio edificio : edificioList){
-            listaobj.add(new Objetos("Ubicacion A",edificio.getLatitud(),edificio.getLongitud(),true,"sol"));
+            listaobj.add(new Objetos(edificio.getNombre(),edificio.getLatitud(),edificio.getLongitud(),true,"sol"));
         }
 
 
@@ -125,15 +262,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void llenarMarker(){
         int b=0;
         LatLng a;
-        prueba=null;
+
         for(Objetos ob:listaobj){
             b++;
-
+            prueba = null;
+            System.out.println("PROBAMOS");
             a = new LatLng(ob.latitud,ob.longitud);
             int imagen = getResources().getIdentifier(ob.icono, "drawable", getPackageName());
             if (ob.estado)
             {
-                prueba=mMap.addMarker(new MarkerOptions().position(a).title(ob.nombre));
+                prueba = mMap.addMarker(new MarkerOptions().position(a).title(ob.nombre));
+                prueba.showInfoWindow();
             }
             else {
                 prueba = mMap.addMarker(new MarkerOptions().position(a).title(ob.nombre).icon(BitmapDescriptorFactory.fromResource(imagen)));
@@ -154,6 +293,50 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 CameraUpdateFactory.newCameraPosition(camPos);
 
         mMap.animateCamera(camUpd3);
+
+
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(final Marker m) {
+
+                Button btn1, btn2;
+                myDialog.setContentView(see_or_evaluate);
+                btn1 = (Button) myDialog.findViewById(R.id.see);
+                btn2 = (Button) myDialog.findViewById(R.id.evaluate);
+                btn1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        System.out.println(m.getTitle() + " MARKER");
+                        Intent intent = new Intent(myDialog.getContext(), BuildingActivity.class);
+                        intent.putExtra("edificio", m.getTitle());
+                        startActivity(intent);
+
+                        myDialog.dismiss();
+                    }
+                });
+
+                if (edificios_evaluados.contains(m.getTitle())){
+                    btn2.setEnabled(false);
+                }
+
+                btn2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Intent intent = new Intent(myDialog.getContext(), EvaluationActivity.class);
+                        startActivity(intent);
+
+                        myDialog.dismiss();
+                    }
+                });
+
+                myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                myDialog.show();
+
+                return true;
+            }
+        });
     }
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -182,9 +365,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     dir = new LatLng(ob.latitud, ob.longitud);
                     if (ob.estado) {
                         double lat = dir.latitude;
-                        double lon = dir.longitude;
+                        double lon = dir.longitude; //Metodo para radios cruzados
                         if ((loc.getLatitude() > lat + x1 && lat + x2 > loc.getLatitude()) && (loc.getLongitude() > lon + y1 && lon + y2 > loc.getLongitude())) {
-
+                            System.out.println("hola");
                             prueba.remove();
                             //Intent in = new Intent(MapsActivity.this, Opcion.class);
                             //startActivity(in);

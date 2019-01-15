@@ -53,6 +53,8 @@ public class ContainerActivity extends AppCompatActivity {
     private String userID;
     User user;
 
+    int tabSelelected;
+
     //PARA EL POPUP IMAGENES
     CarouselView carouselView;
     int[] sampleImages = {R.drawable.vector_86, R.drawable.vector_87, R.drawable.vector_88, R.drawable.vector_89};
@@ -102,14 +104,14 @@ public class ContainerActivity extends AppCompatActivity {
             public void onTabSelected(int tabId) {
                 switch (tabId) {
                     case R.id.challenge:
-                        //changeFragment(challengeFragment);
+                        changeFragment(challengeFragment);
 
                         break;
                     case R.id.maps:
                         //getPuntos();
                         //MapsActivity mapsActivity = new MapsActivity();
                         //changeFragment(mapsActivity);
-
+                        finish();
                         break;
                     case R.id.search:
                         changeFragment(searchFragment);
@@ -146,7 +148,7 @@ public class ContainerActivity extends AppCompatActivity {
                 System.out.println("QUE PASO " + dataSnapshot);
                 user = dataSnapshot.getValue(User.class);
                 System.out.println(""+user.getEdificios_evaluados());
-                mapFragment.edificios_evaluados = user.getEdificios_evaluados();
+                //mapFragment.edificios_evaluados = user.getEdificios_evaluados();
                 changeFragment(mapFragment);
                 switch (user.getPuntos()){
                     case 1:
@@ -172,7 +174,9 @@ public class ContainerActivity extends AppCompatActivity {
 
     private void setViews() {
         bottomBar = (BottomBar) findViewById(R.id.bottombar);
-        bottomBar.setDefaultTab(R.id.maps);
+        Intent intent = getIntent();
+        tabSelelected = intent.getIntExtra("tabSelected", 0);
+        bottomBar.setDefaultTab(tabSelelected);
         myDialog = new Dialog(this);
     }
 
