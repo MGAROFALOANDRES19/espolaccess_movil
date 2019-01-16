@@ -71,7 +71,10 @@
 
         <activity
             android:name=".views.fragments.MapsActivity"
-            android:label="@string/title_activity_maps"></activity>
+            android:label="@string/title_activity_maps" />
+        <activity
+            android:name=".views.Referencia2Activity"
+            android:label="@string/title_activity_referencia2"></activity>
     </application>
 
 </manifest>

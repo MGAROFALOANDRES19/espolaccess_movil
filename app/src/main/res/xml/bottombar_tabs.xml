@@ -4,7 +4,10 @@
         id="@+id/maps"
         title="@string/tab_acceso"
         icon="@drawable/app11_22"
-        barColorWhenSelected="@color/editTextColorBlue"
+        inActiveColor="#00FF00"
+        activeColor="#FF0000"
+        barColorWhenSelected="#FF0000"
+        badgeBackgroundColor="#FF0000"
         badgeHidesWhenActive="true"
 
         />

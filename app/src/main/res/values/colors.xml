@@ -6,4 +6,6 @@
     <color name="colorAccentLow">#F4511E</color>
     <color name="editTextColorBlue">#112f41</color>
     <color name="backgroundText_card">#53292929</color>
+    <color name="tab_enable">#ffffff</color>
+    <color name="tab_disable">#ffffff</color>
 </resources>

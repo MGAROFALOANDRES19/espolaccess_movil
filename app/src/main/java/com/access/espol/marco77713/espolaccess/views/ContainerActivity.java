@@ -173,7 +173,7 @@ public class ContainerActivity extends AppCompatActivity {
     }
 
     private void setViews() {
-        bottomBar = (BottomBar) findViewById(R.id.bottombar);
+        bottomBar = (BottomBar) findViewById(R.id.bottom_navigation);
         Intent intent = getIntent();
         tabSelelected = intent.getIntExtra("tabSelected", 0);
         bottomBar.setDefaultTab(tabSelelected);

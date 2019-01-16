@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
@@ -63,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
         inputEmail = (EditText) findViewById(R.id.email);
         inputPassword = (EditText) findViewById(R.id.password);
-        Button ahlogin = (Button) findViewById(R.id.login);
+        final Button ahlogin = (Button) findViewById(R.id.login);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         TextView btnSignIn = (TextView) findViewById(R.id.createaccount);
 
@@ -81,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String email = inputEmail.getText().toString();
                 final String password = inputPassword.getText().toString();
+                //ahlogin.setBackground(R.drawable.);
                 if (TextUtils.isEmpty(email)) {
                     Toast.makeText(getApplicationContext(), "Ingresa correo electrónico", Toast.LENGTH_SHORT).show();
                     return;

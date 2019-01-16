@@ -31,4 +31,12 @@
         <item name="android:windowBackground">@drawable/btn_rounded</item>
     </style>
 
+    <style name="SplashTheme" parent="AppTheme">
+        <item name="android:windowBackground">@drawable/splash</item>
+    </style>
+
+    <style name="searchActionBarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:textColorPrimary">@color/colorAccent</item> <!-- back key color defined here!! -->
+    </style>
+
 </resources>

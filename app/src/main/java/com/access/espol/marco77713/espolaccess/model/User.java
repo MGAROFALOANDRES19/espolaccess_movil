@@ -7,7 +7,7 @@ import java.util.Map;
 public class User implements Comparable{
     private int puntos;
     private int lugar;
-    private Map<String, String> edificios_evaluados;
+    private ArrayList<String> edificios_evaluados;
     private ArrayList<Pregunta> respuestas;
     private String email;
     private int personalizacion; //0,1,2
@@ -20,13 +20,19 @@ public class User implements Comparable{
         this.personalizacion = personalizacion;
     }
 
-    public User(int puntos, int lugar, Map<String, String> edificios_evaluados, ArrayList<Pregunta> respuestas, String email, int personalizacion) {
+    public User(int puntos, int lugar, ArrayList<String> edificios_evaluados, ArrayList<Pregunta> respuestas, String email, int personalizacion) {
         this.puntos = puntos;
         this.lugar = lugar;
         this.edificios_evaluados = edificios_evaluados;
         this.respuestas = respuestas;
         this.email = email;
         this.personalizacion = personalizacion;
+    }
+
+    public User(int puntos, ArrayList<String> edificios_evaluados, String email) {
+        this.puntos = puntos;
+        this.edificios_evaluados = edificios_evaluados;
+        this.email = email;
     }
 
     public User(){
@@ -49,11 +55,11 @@ public class User implements Comparable{
         this.lugar = lugar;
     }
 
-    public Map<String, String> getEdificios_evaluados() {
+    public ArrayList<String> getEdificios_evaluados() {
         return edificios_evaluados;
     }
 
-    public void setEdificios_evaluados(Map<String, String> edificios_evaluados) {
+    public void setEdificios_evaluados(ArrayList<String> edificios_evaluados) {
         this.edificios_evaluados = edificios_evaluados;
     }
 

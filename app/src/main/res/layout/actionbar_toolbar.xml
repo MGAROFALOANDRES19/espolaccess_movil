@@ -13,6 +13,7 @@
         android:paddingTop="@dimen/padding_drawable"
         android:paddingLeft="@dimen/like_margintop_card"
         android:background="@color/editTextColorBlue"
-        app:popupTheme="@style/AppTheme.PopupOverlay" />
+        app:popupTheme="@style/AppTheme.PopupOverlay"
+        android:theme="@style/searchActionBarTheme"/>
 
 </android.support.design.widget.AppBarLayout>

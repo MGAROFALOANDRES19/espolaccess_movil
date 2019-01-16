@@ -17,8 +17,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginTop="15dp">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -32,96 +32,10 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Usuario"
-                android:gravity="left"
-                android:paddingLeft="25dp"
-                android:textSize="20sp"
-                android:layout_weight=".1"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Usuario"
-                android:gravity="left"
-                android:paddingLeft="25dp"
-                android:textSize="20sp"
-                android:layout_weight=".1"
-                />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Email"
-                android:gravity="left"
-                android:paddingLeft="25dp"
-                android:textSize="20sp"
-                android:layout_weight=".1"
-                />
-            <TextView
                 android:id="@+id/email"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Email"
-                android:gravity="left"
-                android:paddingLeft="25dp"
-                android:textSize="20sp"
-                android:layout_weight=".1"
-                />
-        </LinearLayout>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/changePassword"
-            android:background="@android:color/holo_orange_dark"
-            android:textSize="20sp"
-            android:paddingLeft="25dp"
-            android:textColor="@android:color/black"/>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Contraseña"
-                android:gravity="left"
-                android:paddingLeft="25dp"
-                android:textSize="20sp"
-                android:layout_weight=".1"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Contraseña"
-                android:gravity="left"
-                android:paddingLeft="25dp"
-                android:textSize="20sp"
-                android:layout_weight=".1"
-                />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Repetir"
-                android:gravity="left"
-                android:paddingLeft="25dp"
-                android:textSize="20sp"
-                android:layout_weight=".1"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Repetir"
                 android:gravity="left"
                 android:paddingLeft="25dp"
                 android:textSize="20sp"

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#ed553b"/>
+    <corners android:radius="@dimen/radious_button"/>
+    <stroke android:color="#dd4231" android:width="3dp"></stroke>
+</selector>

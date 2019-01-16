@@ -99,20 +99,18 @@ public class SearchFragment extends Fragment  implements SearchView.OnQueryTextL
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
         inflater.inflate(R.menu.menu_search, menu);
         super.onCreateOptionsMenu(menu, inflater);
         MenuItem.OnActionExpandListener onActionExpandListener = new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
 
-                Toast.makeText(getActivity(), "Action View Expanded...", Toast.LENGTH_SHORT).show();
                 return true;
             }
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                Toast.makeText(getActivity(), "Collapse View Expanded...", Toast.LENGTH_SHORT).show();
                 return true;
             }
         };
@@ -122,6 +120,7 @@ public class SearchFragment extends Fragment  implements SearchView.OnQueryTextL
         searchView.setOnQueryTextListener(this);
 
         menuItem.setOnActionExpandListener(onActionExpandListener);
+//        menuItem.expandActionView();
     }
 
     @Override

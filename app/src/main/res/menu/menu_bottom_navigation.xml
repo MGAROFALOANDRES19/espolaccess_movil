@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/maps"
+        android:title="@string/tab_acceso"
+        android:icon="@drawable/acceso_tab"
+        app:showAsAction="ifRoom"
+        />
+    <item
+        android:id="@+id/search"
+        android:title="@string/tab_search"
+        android:icon="@drawable/buscar_tab"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/challenge"
+        android:title="@string/tab_challenge"
+        android:icon="@drawable/competencia_tab"
+        app:showAsAction="ifRoom"
+        />
+    <item
+        android:id="@+id/profile"
+        android:title="@string/tab_profile"
+        android:icon="@drawable/perfil_tab"
+        app:showAsAction="ifRoom"
+        />
+</menu>
