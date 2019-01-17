@@ -64,6 +64,8 @@ public class SearchFragment extends Fragment  implements SearchView.OnQueryTextL
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
+                edificioList.clear();
+                buildRowsList.clear();
                 for (DataSnapshot snap: dataSnapshot.getChildren()) {
                     Edificio edificio = snap.getValue(Edificio.class);
                     edificioList.add(edificio);

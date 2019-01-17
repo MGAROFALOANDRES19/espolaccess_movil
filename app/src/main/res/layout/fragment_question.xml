@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/question_background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".views.fragments.QuestionFragment"
-    android:background="@drawable/app11_08">
+    >
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -69,7 +70,8 @@
                     android:background="@drawable/btn_rounded"
                     android:text="SI"
                     android:layout_marginBottom="10dp"
-                    android:theme="@style/RaisedButtonDark"/>
+                    android:textColor="@color/btnTextColor"
+                    />
                 <Button
                     android:id="@+id/ask2"
                     android:layout_width="match_parent"
@@ -79,17 +81,7 @@
                     android:background="@drawable/btn_rounded"
                     android:text="NO"
                     android:layout_marginBottom="10dp"
-                    android:theme="@style/RaisedButtonDark"/>
-                <Button
-                    android:id="@+id/ask3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="25dp"
-                    android:layout_marginRight="25dp"
-                    android:background="@drawable/btn_rounded"
-                    android:text="EN PARTE"
-                    android:layout_marginBottom="10dp"
-                    android:theme="@style/RaisedButtonDark"/>
+                    android:textColor="@color/btnTextColor"/>
 
             </LinearLayout>
         </ScrollView>

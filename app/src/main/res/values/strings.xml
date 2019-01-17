@@ -24,7 +24,7 @@
     <string name="slogan">Disfruta de nuestra app iniciando sesión o registrándote</string>
     <string name="close">X</string>
     <string name="hint_search">Buscar</string>
-    <string name="askForBuildingEvaluation">Usted desea</string>
+    <string name="askForBuildingEvaluation">¿Usted desea?</string>
     <string name="intro_1_1">Esta aplicación </string>
     <string name="intro_1_2">informa a las</string>
     <string name="intro_1_3">personas con discapacidad</string>
@@ -46,7 +46,7 @@
     <string name="tab_challenge">Competencia</string>
     <string name="title_activity_maps">Map</string>
     <string name="correoEspol">demo@espol.edu.ec</string>
-    <string name="see">VER</string>
+    <string name="see">VER INFORMACIÓN</string>
     <string name="evaluate">EVALUAR</string>
     <string name="title_activity_referencia2">Referencia2Activity</string>
     <string name="title_home">Home</string>

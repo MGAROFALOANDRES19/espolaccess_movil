@@ -6,10 +6,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".views.fragments.StratFragment">
     <LinearLayout
+        android:id="@+id/background_evaluation"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/app11_04"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="vertical">
     </LinearLayout>
 
 </FrameLayout>

@@ -131,7 +131,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             @Override
             public void onClick(View v) {
-                imageView.setBackground(ContextCompat.getDrawable(getBaseContext(), R.drawable.info_button_pushed));
+                imageViewInformation.setBackground(ContextCompat.getDrawable(getBaseContext(), R.drawable.info_button_pushed));
             }
         });
 
@@ -349,6 +349,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 myDialog.setContentView(see_or_evaluate);
                 btn1 = (Button) myDialog.findViewById(R.id.see);
                 btn2 = (Button) myDialog.findViewById(R.id.evaluate);
+
+                if (user.getEdificios_evaluados().contains(m.getTitle())){
+                    btn2.setEnabled(false);
+                    btn2.setText("Ya evaluado");
+                    btn2.setTextColor(Color.parseColor("#7f7b6d"));
+                    btn2.setBackground(getResources().getDrawable(R.drawable.btn_rounded_pushed));
+
+                }
+
                 btn1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -372,6 +381,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                         Intent intent = new Intent(myDialog.getContext(), EvaluationActivity.class);
                         intent.putExtra("user", mAuth.getCurrentUser().getUid());
+                        intent.putExtra("edificio", m.getTitle());
+                        intent.putExtra("n_edificios_evaluados", user.getEdificios_evaluados().size());
+                        intent.putExtra("user_puntos", user.getPuntos());
                         startActivity(intent);
 
                         myDialog.dismiss();

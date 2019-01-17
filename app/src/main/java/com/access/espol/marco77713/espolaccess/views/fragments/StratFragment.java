@@ -1,12 +1,14 @@
 package com.access.espol.marco77713.espolaccess.views.fragments;
 
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 import com.access.espol.marco77713.espolaccess.R;
 
@@ -16,6 +18,7 @@ import com.access.espol.marco77713.espolaccess.R;
 public class StratFragment extends Fragment {
 
     Button btnIniciar;
+
 
     public StratFragment() {
         // Required empty public constructor
@@ -27,7 +30,9 @@ public class StratFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        return inflater.inflate(R.layout.fragment_strat, container, false);
+        View view = inflater.inflate(R.layout.fragment_strat, container, false);
+
+        return view;
     }
 
 }

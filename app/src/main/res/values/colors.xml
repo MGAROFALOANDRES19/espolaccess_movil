@@ -8,4 +8,5 @@
     <color name="backgroundText_card">#53292929</color>
     <color name="tab_enable">#ffffff</color>
     <color name="tab_disable">#ffffff</color>
+    <color name="btnTextColor">#fff8db</color>
 </resources>

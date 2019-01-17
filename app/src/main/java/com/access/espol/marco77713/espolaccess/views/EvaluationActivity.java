@@ -1,11 +1,13 @@
 package com.access.espol.marco77713.espolaccess.views;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 
 import com.access.espol.marco77713.espolaccess.R;
 import com.access.espol.marco77713.espolaccess.model.Pregunta;
@@ -42,14 +44,36 @@ public class EvaluationActivity extends AppCompatActivity {
     int contPreguntas = 0;
 
     String currentUser;
+    String edificio;
+    int user_puntos;
+
+    FrameLayout frameLayout;
+    Drawable drawable;
+
+    int i;
+
+    Map<String, Drawable> imageBuildings = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_evaluation);
 
+        btnPrev = (Button) findViewById(R.id.prev);
+
         Intent intent = getIntent();
         currentUser = intent.getStringExtra("user");
+        edificio = intent.getStringExtra("edificio");
+        i = intent.getIntExtra("n_edificio_evaluados", 0);
+        user_puntos = intent.getIntExtra("user_puntos", 0);
+        frameLayout = (FrameLayout) findViewById(R.id.container);
+
+        imageBuildings.put("EDCOM", getResources().getDrawable(R.drawable.edcom2_start_evaluation));
+        imageBuildings.put("FIEC", getResources().getDrawable(R.drawable.fiec_start_evaluation));
+        imageBuildings.put("EDCOM_background", getResources().getDrawable(R.drawable.edcom_background));
+        imageBuildings.put("FIEC_background", getResources().getDrawable(R.drawable.fiec_background));
+
+        frameLayout.setBackground(imageBuildings.get(edificio));
 
         StratFragment stratFragment = new StratFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.container, stratFragment)
@@ -70,6 +94,7 @@ public class EvaluationActivity extends AppCompatActivity {
                     Pregunta pregunta = snap.getValue(Pregunta.class);
 
                     questionFragment = new QuestionFragment();
+
                     questionFragment.pregunta = pregunta;
                     questionFragment.numero_pregunta = j;
 
@@ -77,6 +102,8 @@ public class EvaluationActivity extends AppCompatActivity {
                     j++;
 
                 }
+            frameLayout.setBackground(imageBuildings.get(edificio+"_background"));
+
             }
 
             @Override
@@ -89,36 +116,44 @@ public class EvaluationActivity extends AppCompatActivity {
     }
 
     public void prevAction(View view) {
-        btnPrev = (Button) findViewById(R.id.prev);
+
         if(btnPrev.getTag().equals("Cancelar")){
             System.out.println("PILAS");
             this.finish();
-
+            btnPrev.setBackground(getResources().getDrawable(R.drawable.prev_arrow_button_pushed));
             //startActivity(new Intent(EvaluationActivity.this, MapsActivity.class));
         }
 
     }
 
     public void nextAction(View view) {
+
         btnNext = (Button) findViewById(R.id.next);
         if(btnNext.getTag().equals("Iniciar")){
-
-
+        contPreguntas = 0;
+            btnNext.setBackground(getResources().getDrawable(R.drawable.next_arrow_button_pushed));
             btnNext.setTag("Next");
-            System.out.println(questionFragments.size());
+            btnNext.setEnabled(false);
+            btnPrev.setVisibility(View.INVISIBLE);
+            System.out.println("Numero de preguntas: " + questionFragments.size());
             getSupportFragmentManager().beginTransaction().replace(R.id.container, questionFragments.get(contPreguntas))
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                     .addToBackStack(null).commit();
+            //btnNext.setBackground(getResources().getDrawable(R.drawable.next_arrow_button));
             contPreguntas++;
         }
 
         else if(btnNext.getTag().equals("Next")){
 
+            btnNext.setBackground(getResources().getDrawable(R.drawable.next_arrow_button_pushed));
+            btnNext.setEnabled(false);
+            System.out.println("Contador de preguntas: " + contPreguntas);
+
             getSupportFragmentManager().beginTransaction().replace(R.id.container, questionFragments.get(contPreguntas))
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                     .addToBackStack(null).commit();
 
-            if (contPreguntas < questionFragments.size()){
+            if (contPreguntas == questionFragments.size()-1){
                 btnNext.setTag("Acabar");
             }
                 contPreguntas++;
@@ -130,15 +165,23 @@ public class EvaluationActivity extends AppCompatActivity {
                 respuestas.add(q.pregunta.getRespuesta());
             }
 
-            Validacion validacion = new Validacion(currentUser, "ddad", respuestas);
-            myRef2.child("validaciones").child("2").setValue(validacion);
+            Validacion validacion = new Validacion(currentUser, edificio, respuestas);
+            myRef2.child("validaciones").push().setValue(validacion);
+             i++;
 
-            myRef2.child("users").child(currentUser).child("edificios_evaluados").push().setValue("sfsofskfskfs");
+            myRef2.child("users").child(currentUser).child("edificios_evaluados").child(""+i).setValue(edificio);
+            myRef2.child("users").child(currentUser).child("puntos").setValue(user_puntos+25);
 
             WinShareFragment winShareFragment = new WinShareFragment();
             getSupportFragmentManager().beginTransaction().replace(R.id.container, winShareFragment)
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                     .addToBackStack(null).commit();
+
+            btnNext.setBackground(getResources().getDrawable(R.drawable.social_button));
+            btnNext.setTag("share");
+        }
+
+        else if (btnNext.getTag().equals("share")){
 
         }
     }
