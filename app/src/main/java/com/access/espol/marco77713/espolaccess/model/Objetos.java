@@ -7,21 +7,24 @@ public class Objetos {
     public double latitud;
     public double longitud;
     public boolean estado;
+    public int resultado_accesbilidad;
 
 
-    public Objetos(){
-        nombre="";
-        latitud=0.0;
-        longitud=0.0;
-        estado=false;
+    public Objetos(String nombre, float latitud, float longitud, boolean estado){
+        this.nombre ="";
+        this.latitud =0.0;
+        this.longitud =0.0;
+        this.estado =false;
         icono="";
+
     }
-    public Objetos(String nombre,double latitud, double longitud, boolean estado, String icono){
+    public Objetos(String nombre,double latitud, double longitud, boolean estado, int resultado_accesibilidad){
         this.nombre=nombre;
         this.latitud=latitud;
         this.longitud=longitud;
         this.estado=estado;
         this.icono=icono;
+        this.resultado_accesbilidad = resultado_accesibilidad;
     }
 
     public String getNombre() {

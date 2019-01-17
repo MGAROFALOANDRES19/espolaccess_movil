@@ -2,6 +2,7 @@ package com.access.espol.marco77713.espolaccess.views.fragments;
 
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,9 +40,11 @@ public class ProfileFragment extends Fragment {
 
     private TextView email;
     private RadioGroup personalizacion;
+    public  User userClass;
+
+    RadioButton r1, r2, r3;
 
     public ProfileFragment(FirebaseAuth mAuth) {
-        // Required empty public constructor
     }
 
     @Override
@@ -56,11 +60,19 @@ public class ProfileFragment extends Fragment {
 
         email = (TextView) view.findViewById(R.id.email);
         personalizacion = (RadioGroup) view.findViewById(R.id.personalizacion);
-        Button button = (Button) view.findViewById(R.id.signOut);
+        final Button button = (Button) view.findViewById(R.id.signOut);
+        r1 = (RadioButton) view.findViewById(R.id.r1);
+        r2 = (RadioButton) view.findViewById(R.id.r2);
+        r3 = (RadioButton) view.findViewById(R.id.r3);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                button.setEnabled(false);
+                button.setTextColor(Color.parseColor("#7f7b6d"));
+                button.setBackground(getResources().getDrawable(R.drawable.btn_rounded_pushed));
+
                 mAuth.signOut();
             }
         });
@@ -78,6 +90,21 @@ public class ProfileFragment extends Fragment {
                     System.out.println("onAuthStateChanged:signed_in:" + user.getUid());
                     System.out.println("Successfully signed in with: " + user.getEmail());
                     email.setText(user.getEmail());
+                    switch (userClass.getPersonalizacion()){
+                        case (0):
+                            r1.setChecked(true);
+                            break;
+
+                        case (1):
+                            r2.setChecked(true);
+                            break;
+
+                        case (2):
+                            r3.setChecked(true);
+                            break;
+
+                    }
+
                 } else {
                     // User is signed out
                     toastMessage("Successfully signed out.");
@@ -104,13 +131,24 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        Button btnSave = (Button) view.findViewById(R.id.save);
+        final Button btnSave = (Button) view.findViewById(R.id.save);
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                btnSave.setEnabled(false);
+                btnSave.setTextColor(Color.parseColor("#7f7b6d"));
+                btnSave.setBackground(getResources().getDrawable(R.drawable.btn_rounded_pushed));
                 System.out.println("onClick: Submit pressed.");
                 String mail = email.getText().toString();
-                int personalization = personalizacion.getCheckedRadioButtonId();
+                int personalization = 2;
+
+                if(r1.isChecked()){
+                    personalization = 0;
+                }if(r2.isChecked()){
+                    personalization = 1;
+                }if(r3.isChecked()){
+                    personalization = 2;
+                }
 
                 System.out.println("onClick: Attempting to submit to database: \n" +
                         "name: " + personalization + "\n" +
@@ -119,11 +157,13 @@ public class ProfileFragment extends Fragment {
 
                 //handle the exception if the EditText fields are null
                 if(!mail.equals("") && !personalizacion.equals("")){
-                    User userInformation = new User(mail,personalization);
-                    myRef.child("users").child(userID).setValue(userInformation);
+                    userClass.setEmail(mail);
+                    userClass.setPersonalizacion(personalization);
+                    System.out.println(userClass);
+                    myRef.child("users").child(userID).setValue(userClass);
                     toastMessage("New Information has been saved.");
                     email.setText("");
-                    personalizacion.setSelected(false);
+
                 }else{
                     toastMessage("Fill out all the fields");
                 }

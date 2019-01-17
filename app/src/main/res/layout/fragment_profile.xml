@@ -18,19 +18,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginTop="15dp">
+        android:layout_marginTop="10dp"
+        >
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/account"
-            android:background="@android:color/holo_orange_dark"
+            android:background="@android:color/holo_orange_light"
             android:textSize="20sp"
-            android:paddingLeft="25dp"
+            android:paddingLeft="20dp"
             android:textColor="@android:color/black"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:background="@drawable/text_lines"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:text="Email"
+                android:layout_marginLeft="20dp"
+                android:textColor="@android:color/black"/>
             <TextView
                 android:id="@+id/email"
                 android:layout_width="wrap_content"
@@ -38,7 +48,7 @@
                 android:text="Email"
                 android:gravity="left"
                 android:paddingLeft="25dp"
-                android:textSize="20sp"
+                android:textSize="15sp"
                 android:layout_weight=".1"
                 />
         </LinearLayout>
@@ -46,46 +56,77 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/personalization"
-            android:background="@android:color/holo_orange_dark"
+            android:background="@android:color/holo_orange_light"
             android:textSize="20sp"
             android:paddingLeft="25dp"
-            android:textColor="@android:color/black"/>
+            android:textColor="@android:color/black"
+            android:layout_marginTop="@dimen/bottombar_height"/>
        <RadioGroup
            android:id="@+id/personalizacion"
            android:layout_width="match_parent"
-           android:layout_height="wrap_content">
+           android:layout_height="wrap_content"
+           >
            <RadioButton
-               android:layout_width="wrap_content"
+               android:id="@+id/r1"
+               android:layout_width="match_parent"
                android:layout_height="match_parent"
                android:text="Tengo movilidad reducida"
-               android:textSize="20sp"/>
+               android:textSize="15sp"
+               android:paddingLeft="15dp"
+               android:background="@drawable/text_lines"
+               android:layoutDirection="rtl"
+               android:textAlignment="textStart"
+               android:layout_gravity="start"
+               android:buttonTint="@color/colorAccent"
+               />
             <RadioButton
-                android:layout_width="wrap_content"
+                android:id="@+id/r2"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="Uso de silla de ruedas"
-                android:textSize="20sp"/>
+                android:textSize="15sp"
+                android:paddingLeft="15dp"
+                android:background="@drawable/text_lines"
+                android:layoutDirection="rtl"
+                android:textAlignment="textStart"
+                android:layout_gravity="start"
+                android:buttonTint="@color/colorAccent"/>
             <RadioButton
-                android:layout_width="wrap_content"
+                android:id="@+id/r3"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:textSize="20sp"
-                android:text="Ninguna de las anteriores"/>
+                android:textSize="15sp"
+                android:text="Ninguna de las anteriores"
+                android:paddingLeft="15dp"
+                android:background="@drawable/text_lines"
+                android:layoutDirection="rtl"
+                android:textAlignment="textStart"
+                android:layout_gravity="start"
+                android:buttonTint="@color/colorAccent"/>
        </RadioGroup>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp">
+            android:layout_marginTop="50dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
             <Button
                 android:id="@+id/save"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="GUARDAR"
-                android:layout_weight=".1"/>
+                android:layout_weight=".4"
+                android:background="@drawable/btn_rounded"
+                android:layout_marginRight="20dp"
+                android:textColor="#fff8db"/>
             <Button
                 android:id="@+id/signOut"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="CERRAR SESION"
-                android:layout_weight=".1"/>
+                android:layout_weight=".4"
+                android:background="@drawable/btn_rounded"
+                android:textColor="#fff8db"/>
         </LinearLayout>
     </LinearLayout>
     </ScrollView>

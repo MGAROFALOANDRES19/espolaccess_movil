@@ -13,7 +13,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.access.espol.marco77713.espolaccess.views.ContainerActivity;
 import com.access.espol.marco77713.espolaccess.views.CreateAccountActivity;
 import com.access.espol.marco77713.espolaccess.views.fragments.MapsActivity;
 import com.google.android.gms.common.SignInButton;

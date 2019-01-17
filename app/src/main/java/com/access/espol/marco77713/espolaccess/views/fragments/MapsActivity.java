@@ -11,23 +11,17 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -39,7 +33,6 @@ import com.access.espol.marco77713.espolaccess.model.Edificio;
 import com.access.espol.marco77713.espolaccess.model.Objetos;
 import com.access.espol.marco77713.espolaccess.model.User;
 import com.access.espol.marco77713.espolaccess.views.BuildingActivity;
-import com.access.espol.marco77713.espolaccess.views.ContainerActivity;
 import com.access.espol.marco77713.espolaccess.views.EvaluationActivity;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -66,47 +59,46 @@ import java.util.List;
 import static com.access.espol.marco77713.espolaccess.R.layout.see_or_evaluate;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
+
+    //DECLARACION DE VARIABLES
+
     private GoogleMap mMap;
-    private Marker prueba;
-    double x1=-0.000002295;//solo cambiar penultimo digito 115 => 125 OJO 195
-    double x2= 0.000002295;
-    double y1=-0.000002295;
-    double y2= 0.000002295;
-    ArrayList<Objetos> listaobj = new ArrayList<Objetos>();
-    public ArrayList<String> edificios_evaluados = new ArrayList<>();
+    private Marker prueba; //*
+    double x1=-0.00001;//solo cambiar penultimo digito 115 => 125 OJO 195
+    double x2= 0.00001;
+    double y1=-0.00014;
+    double y2= 0.00014;
+    ArrayList<Objetos> listaobj = new ArrayList<Objetos>(); //*
+    public ArrayList<String> edificios_evaluados = new ArrayList<>(); //*
     private static int RETICION_PERMISO_LOCALIZACION = 101;
     private double lat, lon;
     private String mensaje;
-
-    int i =0;
-
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference myRef;
-
-    FirebaseAuth mAuth;
-    FirebaseAuth.AuthStateListener mAuthListener;
+    private boolean puedeEvaluar = false;
+    int i =0; //*
 
 
+    private FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private DatabaseReference myRef;
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
     private DatabaseReference myRef2;
-
-    User user;
-
+    User user; //*
     private List<Edificio> edificioList = new ArrayList<>();
-
     Dialog myDialog;
     public BottomNavigationView bottomBar;
     ImageView imageView, imageViewInformation;
-
+    Toolbar toolbar;
     SearchFragment searchFragment = new SearchFragment();
     ProfileFragment profileFragment = new ProfileFragment(mAuth);
     ChallengeFragment challengeFragment = new ChallengeFragment();
+
+
 
     @Override
     protected void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
     }
-
 
     @Override
     public void onStop() {
@@ -122,7 +114,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        this.setViews();
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         imageView = (ImageView) findViewById(R.id.edificios_evaluados);
         imageViewInformation = (ImageView) findViewById(R.id.information);
@@ -148,53 +142,53 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         final FrameLayout frameLayout = (FrameLayout) findViewById(R.id.container);
 
         bottomBar.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-                                                          @Override
-                                                          public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                                                              switch (menuItem.getItemId()) {
-                                                                  case R.id.challenge:
-                                                                      frameLayout.setVisibility(View.VISIBLE);
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.challenge:
+                        frameLayout.setVisibility(View.VISIBLE);
 
-                                                                      getSupportFragmentManager().beginTransaction().replace(R.id.container, challengeFragment)
-                                                                              .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                                                                              .addToBackStack(null).commit();
-                                                                      //getSupportActionBar().setBackgroundDrawable(new ColorDrawable(R.color.editTextColorBlue));
-                                                                      getSupportActionBar().setTitle("Perfil");
-                                                                      getSupportActionBar().show();break;
-                                                                  case R.id.maps:
-                                                                      //getPuntos();
-                                                                      //MapsActivity mapsActivity = new MapsActivity();
-                                                                      //changeFragment(mapsActivity);
-                                                                      getSupportActionBar().hide();
-                                                                      frameLayout.setVisibility(View.INVISIBLE);
-                                                                      break;
-                                                                  case R.id.search:
-                                                                      frameLayout.setVisibility(View.VISIBLE);
+                        getSupportFragmentManager().beginTransaction().replace(R.id.container, challengeFragment)
+                                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                                .addToBackStack(null).commit();
+                        //getSupportActionBar().setBackgroundDrawable(new ColorDrawable(R.color.editTextColorBlue));
+                        getSupportActionBar().setTitle("Perfil");
+                        getSupportActionBar().show();break;
+                    case R.id.maps:
+                        //getPuntos();
+                        //MapsActivity mapsActivity = new MapsActivity();
+                        //changeFragment(mapsActivity);
+                        getSupportActionBar().hide();
+                        frameLayout.setVisibility(View.INVISIBLE);
+                        break;
+                    case R.id.search:
+                        frameLayout.setVisibility(View.VISIBLE);
 
-                                                                      getSupportFragmentManager().beginTransaction().replace(R.id.container, searchFragment)
-                                                                              .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                                                                              .addToBackStack(null).commit();
-                                                                      getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
-                                                                      getSupportActionBar().setTitle(Html.fromHtml("<font color='#333333'>Buscar</font>"));
-                                                                      getSupportActionBar().show();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.container, searchFragment)
+                                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                                .addToBackStack(null).commit();
+                        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+                        getSupportActionBar().setTitle(Html.fromHtml("<font color='#333333'>Buscar</font>"));
+                        getSupportActionBar().show();
                             /*intent.putExtra("tabSelected", R.id.search);
                             startActivity(intent);
                             tabId = R.id.maps;*/
-                                                                      break;
-                                                                  case R.id.profile:
-                                                                      frameLayout.setVisibility(View.VISIBLE);
+                        break;
+                    case R.id.profile:
+                        frameLayout.setVisibility(View.VISIBLE);
+                        profileFragment.userClass = user;
+                        getSupportFragmentManager().beginTransaction().replace(R.id.container, profileFragment)
+                                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                                .addToBackStack(null).commit();
+                        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.editTextColorBlue)));
+                        getSupportActionBar().setTitle(Html.fromHtml("<font color='#ffffff'>Perfil</font>"));
+                        getSupportActionBar().show();
+                        break;
+                }
 
-                                                                      getSupportFragmentManager().beginTransaction().replace(R.id.container, profileFragment)
-                                                                              .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                                                                              .addToBackStack(null).commit();
-                                                                      getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.editTextColorBlue)));
-                                                                      getSupportActionBar().setTitle(Html.fromHtml("<font color='#ffffff'>Perfil</font>"));
-                                                                      getSupportActionBar().show();
-                                                                      break;
-                                                              }
-
-                                                              return true;
-                                                          }
-                                                      });
+                return true;
+            }
+        });
 
         bottomBar.setSelectedItemId(R.id.maps);
 
@@ -224,10 +218,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 switch (user.getEdificios_evaluados().size()){
                     case (1):
-                        imageView.setBackground(ContextCompat.getDrawable(getBaseContext(), R.drawable.edificios_evaluados2));
+                        imageView.setBackground(ContextCompat.getDrawable(getBaseContext(), R.drawable.edificios_evaluados0));
                         break;
                     case (2):
+                        imageView.setBackground(ContextCompat.getDrawable(getBaseContext(), R.drawable.edificios_evaluados1));
+                        break;
+                    case (3):
+                        imageView.setBackground(ContextCompat.getDrawable(getBaseContext(), R.drawable.edificios_evaluados2));
+                        break;
+                    case (4):
                         imageView.setBackground(ContextCompat.getDrawable(getBaseContext(), R.drawable.edificios_evaluados3));
+                        break;
+                    case (5):
+                        imageView.setBackground(ContextCompat.getDrawable(getBaseContext(), R.drawable.edificios_evaluados4));
                         break;
 
 
@@ -251,27 +254,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         ////////////////////LLAMADA A LA BASE DE DATOS
 
-        myRef = database.getReference("edificios");;
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                for (DataSnapshot snap: dataSnapshot.getChildren()) {
-                    Edificio edificio = snap.getValue(Edificio.class);
-                    edificioList.add(edificio);
-                    System.out.println("Value is: " + edificioList);
-                    llenarUbicacion();
-                    llenarMarker();
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                System.out.println("Failed to read value." + error.toException());
-            }
-        });
 
 
         myDialog = new Dialog(this);
@@ -280,7 +262,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 /*      Toast toast1=Toast.makeText(getApplicationContext(), "Prueba: "+listaobj, Toast.LENGTH_SHORT);
         toast1.setGravity(Gravity.CENTER,10,10);
-
         toast1.show();
 */        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         int estado = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
@@ -299,7 +280,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void llenarUbicacion(){
 
         for(Edificio edificio : edificioList){
-            listaobj.add(new Objetos(edificio.getNombre(),edificio.getLatitud(),edificio.getLongitud(),true,"sol"));
+            listaobj.add(new Objetos(edificio.getNombre(),edificio.getLatitud(),edificio.getLongitud(),true,edificio.getResultado_accesibilidad()));
         }
 
 
@@ -314,14 +295,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             prueba = null;
             System.out.println("PROBAMOS");
             a = new LatLng(ob.latitud,ob.longitud);
-            int imagen = getResources().getIdentifier(ob.icono, "drawable", getPackageName());
-            if (ob.estado)
+//            int imagen = getResources().getIdentifier(ob.icono, "drawable", getPackageName());
+            if (ob.resultado_accesbilidad == 0)
             {
-                prueba = mMap.addMarker(new MarkerOptions().position(a).title(ob.nombre));
+                prueba = mMap.addMarker(new MarkerOptions().position(a).title(ob.nombre).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_no_evaluado)));
                 prueba.showInfoWindow();
             }
-            else { //CAMBIO DE IMAGEN
-                prueba = mMap.addMarker(new MarkerOptions().position(a).title(ob.nombre).icon(BitmapDescriptorFactory.fromResource(imagen)));
+            else if(ob.resultado_accesbilidad == 1){ //CAMBIO DE IMAGEN
+                prueba = mMap.addMarker(new MarkerOptions().position(a).title(ob.nombre).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_no_accesible)));
+            }
+            else if(ob.resultado_accesbilidad == 2){ //CAMBIO DE IMAGEN
+                prueba = mMap.addMarker(new MarkerOptions().position(a).title(ob.nombre).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_medianamente_accesible)));
+            }
+            else if(ob.resultado_accesbilidad == 3){ //CAMBIO DE IMAGEN
+                prueba = mMap.addMarker(new MarkerOptions().position(a).title(ob.nombre).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_evaluado)));
             }
         }
     }
@@ -384,7 +371,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         intent.putExtra("edificio", m.getTitle());
                         intent.putExtra("n_edificios_evaluados", user.getEdificios_evaluados().size());
                         intent.putExtra("user_puntos", user.getPuntos());
-                        startActivity(intent);
+
+                        if(puedeEvaluar){
+                            startActivity(intent);
+                        }
+                        else{
+                            Toast.makeText(getBaseContext(), "Acercate a la ubicacion para evaluar", Toast.LENGTH_LONG).show();
+                        }
 
                         myDialog.dismiss();
                     }
@@ -434,6 +427,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                             //Intent in = new Intent(MapsActivity.this, Opcion.class);
                             //startActivity(in);
+                            puedeEvaluar = true;
                             ob.estado = false;
                             llenarMarker();
                         } else {
@@ -446,6 +440,31 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             }
         });
+
+
+        myRef = database.getReference("edificios");;
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                for (DataSnapshot snap: dataSnapshot.getChildren()) {
+                    Edificio edificio = snap.getValue(Edificio.class);
+                    edificioList.add(edificio);
+                    System.out.println("Value is: " + edificioList);
+                    llenarUbicacion();
+                    llenarMarker();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                System.out.println("Failed to read value." + error.toException());
+            }
+        });
+
+
         animarEspol();
     }
 

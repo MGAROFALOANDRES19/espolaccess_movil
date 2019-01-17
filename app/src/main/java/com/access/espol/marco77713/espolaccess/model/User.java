@@ -29,10 +29,11 @@ public class User implements Comparable{
         this.personalizacion = personalizacion;
     }
 
-    public User(int puntos, ArrayList<String> edificios_evaluados, String email) {
+    public User(int puntos, ArrayList<String> edificios_evaluados, String email, int personalizacion) {
         this.puntos = puntos;
         this.edificios_evaluados = edificios_evaluados;
         this.email = email;
+        this.personalizacion = personalizacion;
     }
 
     public User(){

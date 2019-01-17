@@ -104,7 +104,7 @@ public class CreateAccountActivity extends AppCompatActivity {
 
                                     ArrayList<String> edificios_evaluados = new ArrayList<String>();
                                     edificios_evaluados.add("none");
-                                    User userObject = new User(0, edificios_evaluados, email);
+                                    User userObject = new User(0, edificios_evaluados, email, 2);
                                     System.out.println(userObject.getEdificios_evaluados().size());
                                     myRef2.child("users").child(user.getUid()).setValue(userObject);
 

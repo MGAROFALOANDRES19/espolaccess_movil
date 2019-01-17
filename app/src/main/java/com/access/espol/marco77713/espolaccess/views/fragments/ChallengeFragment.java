@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.access.espol.marco77713.espolaccess.R;
 import com.access.espol.marco77713.espolaccess.adapter.PositionAdapter;
@@ -41,6 +42,8 @@ public class ChallengeFragment extends Fragment {
     private RecyclerView recyclerView;
     private PositionAdapter pAdapter;
 
+    RelativeLayout relativeLayout;
+
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef = database.getReference("users");
 
@@ -58,13 +61,15 @@ public class ChallengeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_challenge, container, false);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.positions);
-
+        
 
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
+                posicionsList.clear();
+                usersList.clear();
                 for (DataSnapshot snap: dataSnapshot.getChildren()) {
                     User user = snap.getValue(User.class);
                     usersList.add(user);
@@ -95,8 +100,10 @@ public class ChallengeFragment extends Fragment {
 
 
     private void prepareUsersData() {
+        int i = 1;
         for(User user:usersList){
-            posicionsList.add(new Posicion(user.getLugar(), user.getEmail(), user.getPuntos()));
+            posicionsList.add(new Posicion(i, user.getEmail(), user.getPuntos()));
+            i++;
         }
     }
 
