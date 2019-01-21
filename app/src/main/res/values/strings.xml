@@ -1,9 +1,9 @@
 <resources>
-    <string name="app_name">EspolAccess</string>
+    <string name="app_name">Access Challenge</string>
     <string name="title_activity_referencia">ReferenciaActivity</string>
     <string name="hint_username">Usuario</string>
     <string name="hint_password">Contraseña</string>
-    <string name="btn_login">Iniciar Sesion</string>
+    <string name="btn_login">Iniciar Sesión</string>
     <string name="dont_have_account">¿No tienes cuenta? </string>
     <string name="createaccount">Crea una aquí</string>
     <string name="hint_email">Correo Electrónico</string>
@@ -52,4 +52,14 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="ayuda">Ayuda </string>
+    <string name="a_Lupita">a Lupita </string>
+    <string name="movilizarse">movilizarse</string>
+    <string name="dentro_de_la_U">dentro de la universidad y</string>
+    <string name="fomenta_su_inclusion">fomenta su inclusión</string>
+    <string name="accesibilidad">accesibilidad</string>
+    <string name="podras_ver">prodrás ver y evaluar su</string>
+    <string name="acercandose">Acercándose al edificio</string>
+    <string name="jump">Saltar</string>
+    <string name="next"><![CDATA[Siguiente   >]]></string>
 </resources>

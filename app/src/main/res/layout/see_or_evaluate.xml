@@ -1,33 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/evaluate"
+    android:layout_height="160dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_centerVertical="true"
     android:layout_centerInParent="true"
     android:layout_centerHorizontal="true"
     android:layout_gravity="center"
     android:orientation="vertical"
-    android:background="@drawable/popupbackground">
-    <TextView
-        android:layout_width="wrap_content"
+    android:background="@android:color/white">
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/askForBuildingEvaluation"
-        android:textSize="20sp"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:layout_weight="1"
-        android:textColor="@android:color/black"/>
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/notEvaluated"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Edificio no evaluado"
+            android:textSize="20sp"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            android:layout_marginTop="30dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/askForBuildingEvaluation"
+            android:textSize="20sp"
+            android:textColor="@android:color/black"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"/>
+
+    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="bottom"
         android:layout_alignParentBottom="true"
-        android:layout_gravity="bottom|end"
-        android:layout_marginBottom="25dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp">
+        android:layout_weight="1">
 
         <Button
             android:id="@+id/see"
@@ -37,8 +50,8 @@
             android:text="@string/see"
             android:background="@drawable/btn_rounded"
             android:textColor="@color/colorPrimary"
-            android:layout_weight=".4"
-            android:layout_marginRight="15dp"
+            android:layout_weight=".5"
+            android:layout_marginRight="5dp"
             />
         <Button
             android:id="@+id/evaluate"
@@ -48,10 +61,10 @@
             android:text="@string/evaluate"
             android:textColor="@color/colorPrimary"
             android:background="@drawable/btn_rounded"
-            android:layout_weight=".4"
+            android:layout_weight=".5"
             />
 
 
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>

@@ -1,13 +1,18 @@
 package com.access.espol.marco77713.espolaccess.views;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.constraint.solver.widgets.Snapshot;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.access.espol.marco77713.espolaccess.R;
 import com.access.espol.marco77713.espolaccess.model.Pregunta;
@@ -21,9 +26,11 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +41,7 @@ public class EvaluationActivity extends AppCompatActivity {
     FirebaseDatabase database = FirebaseDatabase.getInstance();
 
     private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference myRef;
+    private DatabaseReference myRef, myRefValidations;
 
     DatabaseReference myRef2 = database.getReference();
 
@@ -64,7 +71,8 @@ public class EvaluationActivity extends AppCompatActivity {
         Intent intent = getIntent();
         currentUser = intent.getStringExtra("user");
         edificio = intent.getStringExtra("edificio");
-        i = intent.getIntExtra("n_edificio_evaluados", 0);
+        i = intent.getIntExtra("n_edificios_evaluados", 0);
+        System.out.println("Esto es lo que llega " + i);
         user_puntos = intent.getIntExtra("user_puntos", 0);
         frameLayout = (FrameLayout) findViewById(R.id.container);
 
@@ -130,17 +138,28 @@ public class EvaluationActivity extends AppCompatActivity {
 
         btnNext = (Button) findViewById(R.id.next);
         if(btnNext.getTag().equals("Iniciar")){
-        contPreguntas = 0;
-            btnNext.setBackground(getResources().getDrawable(R.drawable.next_arrow_button_pushed));
-            btnNext.setTag("Next");
-            btnNext.setEnabled(false);
-            btnPrev.setVisibility(View.INVISIBLE);
-            System.out.println("Numero de preguntas: " + questionFragments.size());
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, questionFragments.get(contPreguntas))
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                    .addToBackStack(null).commit();
-            //btnNext.setBackground(getResources().getDrawable(R.drawable.next_arrow_button));
-            contPreguntas++;
+            ConnectivityManager cm = (ConnectivityManager) getBaseContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            boolean isConnected = activeNetwork != null &&
+                    activeNetwork.isConnectedOrConnecting();
+
+            if(isConnected) {
+                contPreguntas = 0;
+                btnNext.setBackground(getResources().getDrawable(R.drawable.next_arrow_button_pushed));
+                btnNext.setTag("Next");
+                btnNext.setEnabled(false);
+                btnPrev.setVisibility(View.INVISIBLE);
+                System.out.println("Numero de preguntas: " + questionFragments.size());
+                getSupportFragmentManager().beginTransaction().replace(R.id.container, questionFragments.get(contPreguntas))
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                        .addToBackStack(null).commit();
+                //btnNext.setBackground(getResources().getDrawable(R.drawable.next_arrow_button));
+                contPreguntas++;
+            }
+            else{
+                Toast.makeText(getBaseContext(), "No tienes acceso a internet, lo necesitas para hacer uso de la app", Toast.LENGTH_LONG).show();
+            }
         }
 
         else if(btnNext.getTag().equals("Next")){
@@ -165,10 +184,33 @@ public class EvaluationActivity extends AppCompatActivity {
                 respuestas.add(q.pregunta.getRespuesta());
             }
 
+            final List<Integer> list_1 = Arrays.asList();
+            List<Integer> list_2 = Arrays.asList();
+            List<Integer> list_3 = Arrays.asList();
+            List<Integer> list_4 = Arrays.asList();
+            List<Integer> list_5 = Arrays.asList();
+
             Validacion validacion = new Validacion(currentUser, edificio, respuestas);
             myRef2.child("validaciones").push().setValue(validacion);
-             i++;
 
+
+            /*Query query = myRef2.child("validaciones").orderByChild("edificio").equalTo(edificio);
+
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                        System.out.println(snapshot.getValue());
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });*/
+            System.out.println("CUal es tu problema " + i);
+            System.out.println("EDIFICIOS EVALUADOS " + i);
             myRef2.child("users").child(currentUser).child("edificios_evaluados").child(""+i).setValue(edificio);
             myRef2.child("users").child(currentUser).child("puntos").setValue(user_puntos+25);
 
@@ -182,7 +224,9 @@ public class EvaluationActivity extends AppCompatActivity {
         }
 
         else if (btnNext.getTag().equals("share")){
-
+            Toast toast=Toast.makeText(this, "SE COMPARTIRÁ EN UNA RED SOCIAL #SoyIncluyente",Toast.LENGTH_LONG);
+            toast.show();
         }
     }
+
 }

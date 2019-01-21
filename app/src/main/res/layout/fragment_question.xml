@@ -40,7 +40,7 @@
                 android:layout_marginBottom="@dimen/activity_vertical_margin"
                 android:gravity="center"
                 android:text="@string/slogan"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:textColor="@android:color/white"
                 android:background="@drawable/app11_45"
                 android:padding="@dimen/padding_horizontal_login"

@@ -2,10 +2,12 @@ package com.access.espol.marco77713.espolaccess.views.fragments;
 
 
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.access.espol.marco77713.espolaccess.R;
@@ -27,8 +29,8 @@ public class WinShareFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_win_share,
                 container, false);
-        TextView txtClose = (TextView) view.findViewById(R.id.txtClose);
-        txtClose.setOnClickListener(new View.OnClickListener()
+        ImageView imageView = (ImageView) view.findViewById(R.id.txtClose);
+        imageView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)

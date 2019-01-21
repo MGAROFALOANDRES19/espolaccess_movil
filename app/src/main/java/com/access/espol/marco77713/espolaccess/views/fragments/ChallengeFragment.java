@@ -1,6 +1,9 @@
 package com.access.espol.marco77713.espolaccess.views.fragments;
 
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -10,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.access.espol.marco77713.espolaccess.R;
 import com.access.espol.marco77713.espolaccess.adapter.PositionAdapter;
@@ -61,39 +65,50 @@ public class ChallengeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_challenge, container, false);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.positions);
-        
 
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                posicionsList.clear();
-                usersList.clear();
-                for (DataSnapshot snap: dataSnapshot.getChildren()) {
-                    User user = snap.getValue(User.class);
-                    usersList.add(user);
-                    System.out.println("Value is: " + user);
+        ConnectivityManager cm = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        if(isConnected) {
+            myRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    // This method is called once with the initial value and again
+                    // whenever data at this location is updated.
+                    posicionsList.clear();
+                    usersList.clear();
+                    for (DataSnapshot snap : dataSnapshot.getChildren()) {
+                        User user = snap.getValue(User.class);
+                        usersList.add(user);
+                        System.out.println("Value is: " + user);
+                    }
+                    Collections.sort(usersList);
+
+                    prepareUsersData();
+
+                    pAdapter = new PositionAdapter(posicionsList);
+                    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+                    recyclerView.setLayoutManager(mLayoutManager);
+                    recyclerView.setItemAnimator(new DefaultItemAnimator());
+                    recyclerView.setAdapter(pAdapter);
+
                 }
-                Collections.sort(usersList);
-
-                prepareUsersData();
-
-                pAdapter = new PositionAdapter(posicionsList);
-                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
-                recyclerView.setLayoutManager(mLayoutManager);
-                recyclerView.setItemAnimator(new DefaultItemAnimator());
-                recyclerView.setAdapter(pAdapter);
-
-            }
 
 
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                System.out.println("Failed to read value." + error.toException());
-            }
-        });
+                @Override
+                public void onCancelled(DatabaseError error) {
+                    // Failed to read value
+                    System.out.println("Failed to read value." + error.toException());
+                }
+            });
+        }
+        else
+        {
+            Toast.makeText(getContext(), "No tienes acceso a internet, lo necesitas para hacer uso de la app", Toast.LENGTH_LONG).show();
+        }
 
         return view;
     }

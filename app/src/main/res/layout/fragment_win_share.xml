@@ -4,11 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".views.fragments.WinShareFragment"
-    android:background="@drawable/win_screen">
+    android:background="@drawable/win_background">
 
     <!-- TODO: Update blank fragment layout -->
 
-    <TextView
+    <ImageView
         android:id="@+id/txtClose"
         android:layout_width="50dp"
         android:layout_height="50dp"
@@ -20,6 +20,13 @@
         android:background="@drawable/close_button"
         android:layout_marginTop="15dp"
         android:layout_marginRight="15dp"
+        />
+
+    <ImageView
+        android:layout_width="300dp"
+        android:layout_height="320dp"
+        android:background="@drawable/win_image"
+        android:layout_gravity="center"
         />
 
 

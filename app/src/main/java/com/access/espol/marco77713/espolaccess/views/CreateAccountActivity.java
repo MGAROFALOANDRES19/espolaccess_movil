@@ -1,13 +1,17 @@
 package com.access.espol.marco77713.espolaccess.views;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -62,7 +66,8 @@ public class CreateAccountActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Únete al desafío");
+        getSupportActionBar().setTitle(Html.fromHtml("<font color='#333333'>Crea una cuenta</font>"));
+        getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.upbutton));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
@@ -71,59 +76,85 @@ public class CreateAccountActivity extends AppCompatActivity {
         email_id = (EditText) findViewById(R.id.input_email);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         passwordcheck = (EditText) findViewById(R.id.input_password);
-        Button ahsignup = (Button) findViewById(R.id.btn_signup);
+        final Button ahsignup = (Button) findViewById(R.id.btn_signup);
 
 
         ahsignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                ahsignup.setEnabled(false);
+                ahsignup.setBackground(getResources().getDrawable(R.drawable.btn_rounded_pushed));
+
                 final String email = email_id.getText().toString();
                 String password = passwordcheck.getText().toString();
 
                 if (TextUtils.isEmpty(email)) {
-                    Toast.makeText(getApplicationContext(), "Enter Eamil Id", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Ingresa correo", Toast.LENGTH_SHORT).show();
+
+                    ahsignup.setEnabled(true);
+                    ahsignup.setBackground(getResources().getDrawable(R.drawable.btn_rounded));
                     return;
                 }
                 if (TextUtils.isEmpty(password)) {
-                    Toast.makeText(getApplicationContext(), "Enter Password", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Ingresa contraseña", Toast.LENGTH_SHORT).show();
+
+                    ahsignup.setEnabled(true);
+                    ahsignup.setBackground(getResources().getDrawable(R.drawable.btn_rounded));
                     return;
                 }
                 progressBar.setVisibility(View.VISIBLE);
 
-                mAuth.createUserWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(CreateAccountActivity.this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
+                ConnectivityManager cm = (ConnectivityManager) getBaseContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 
-                                progressBar.setVisibility(View.GONE);
+                NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+                boolean isConnected = activeNetwork != null &&
+                        activeNetwork.isConnectedOrConnecting();
 
-                                if (task.isSuccessful()) {
-                                    // Sign in success, update UI with the signed-in user's information
-                                    Log.d(TAG, "createUserWithEmail:success");
-                                    FirebaseUser user = mAuth.getCurrentUser();
+                if(isConnected) {
 
-                                    ArrayList<String> edificios_evaluados = new ArrayList<String>();
-                                    edificios_evaluados.add("none");
-                                    User userObject = new User(0, edificios_evaluados, email, 2);
-                                    System.out.println(userObject.getEdificios_evaluados().size());
-                                    myRef2.child("users").child(user.getUid()).setValue(userObject);
+                    mAuth.createUserWithEmailAndPassword(email, password)
+                            .addOnCompleteListener(CreateAccountActivity.this, new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+
+                                    progressBar.setVisibility(View.GONE);
+
+                                    if (task.isSuccessful()) {
+                                        // Sign in success, update UI with the signed-in user's information
+                                        Log.d(TAG, "createUserWithEmail:success");
+                                        FirebaseUser user = mAuth.getCurrentUser();
+
+                                        ArrayList<String> edificios_evaluados = new ArrayList<String>();
+                                        edificios_evaluados.add("none");
+                                        User userObject = new User(0, edificios_evaluados, email, 2);
+                                        System.out.println(userObject.getEdificios_evaluados().size());
+                                        myRef2.child("users").child(user.getUid()).setValue(userObject);
 
 
-                                    Intent intent = new Intent(CreateAccountActivity.this, MapsActivity.class);
-                                    startActivity(intent);
-                                    finish();
-                                } else {
-                                    // If sign in fails, display a message to the user.
-                                    Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                                    Toast.makeText(CreateAccountActivity.this, "Authentication failed.",
-                                            Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(CreateAccountActivity.this, MapsActivity.class);
+                                        startActivity(intent);
+                                        finish();
+                                    } else {
+                                        // If sign in fails, display a message to the user.
+                                        Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                                        Toast.makeText(CreateAccountActivity.this, "Fallo, asegúrate que los datos sean correctos.",
+                                                Toast.LENGTH_SHORT).show();
+
+                                        ahsignup.setEnabled(true);
+                                        ahsignup.setBackground(getResources().getDrawable(R.drawable.btn_rounded));
+
+                                    }
 
                                 }
 
-                            }
 
+                            });
+                }
+                else{
+                    Toast.makeText(getBaseContext(), "No tienes acceso a internet, lo necesitas para hacer uso de la app", Toast.LENGTH_LONG).show();
+                }
 
-                        });
             }
         });
 

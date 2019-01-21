@@ -1,8 +1,11 @@
 package com.access.espol.marco77713.espolaccess.views;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -15,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.access.espol.marco77713.espolaccess.R;
 import com.access.espol.marco77713.espolaccess.adapter.AccesibilityAdapter;
@@ -66,38 +70,49 @@ public class BuildingActivity extends AppCompatActivity {
         building.setBackground(imageBuildings.get(edificio));
 
         //DATABASE CALL AND WRITTING
-        myRef = database.getReference("edificios/" + edificio);
-        myRef.addValueEventListener(new ValueEventListener() {
+        ConnectivityManager cm = (ConnectivityManager) getBaseContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 
-            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                Edificio edificio = dataSnapshot.getValue(Edificio.class);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
 
-                edificio.context = getBaseContext();
+        if(isConnected) {
 
-                System.out.println(edificio.setResultViewAccesibility());
+            myRef = database.getReference("edificios/" + edificio);
+            myRef.addValueEventListener(new ValueEventListener() {
 
-                txtResultado.setText(edificio.getNombre_completo());
+                @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    // This method is called once with the initial value and again
+                    // whenever data at this location is updated.
+                    Edificio edificio = dataSnapshot.getValue(Edificio.class);
 
-                accesibilityAdapter = new AccesibilityAdapter(edificio.setResultViewAccesibility());
-                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getBaseContext());
-                recyclerView.setLayoutManager(mLayoutManager);
-                recyclerView.setItemAnimator(new DefaultItemAnimator());
-                recyclerView.setAdapter(accesibilityAdapter);
+                    edificio.context = getBaseContext();
 
-            }
+                    System.out.println(edificio.setResultViewAccesibility());
 
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                System.out.println("Failed to read value." + error.toException());
-            }
-        });
+                    txtResultado.setText(edificio.getNombre_completo());
 
+                    accesibilityAdapter = new AccesibilityAdapter(edificio.setResultViewAccesibility());
+                    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getBaseContext());
+                    recyclerView.setLayoutManager(mLayoutManager);
+                    recyclerView.setItemAnimator(new DefaultItemAnimator());
+                    recyclerView.setAdapter(accesibilityAdapter);
 
+                }
+
+                @Override
+                public void onCancelled(DatabaseError error) {
+                    // Failed to read value
+                    System.out.println("Failed to read value." + error.toException());
+                }
+            });
+
+        }
+        else{
+            Toast.makeText(getBaseContext(), "No tienes acceso a internet, lo necesitas para hacer uso de la app", Toast.LENGTH_LONG).show();
+        }
         showToolbar(edificio, true);
     }
 

@@ -1,38 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/info_popup"
-    android:layout_width="350dp"
-    android:layout_height="350dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="@color/colorPrimaryDark"
+    android:background="@drawable/intro_4_background"
     android:padding="@dimen/padding_drawable"
     android:layout_gravity="center">
-    <TextView
-        android:id="@+id/txtClose"
-        android:layout_width="@dimen/close"
-        android:layout_height="@dimen/close"
-        android:textColor="@android:color/white"
-        android:text="@string/close"
-        android:textStyle="bold"
+
+    <Button
+        android:id="@+id/btn_closeInfo"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:background="@drawable/close_button"
         android:layout_gravity="end"
-        android:gravity="center"
-        android:background="@drawable/btn_rounded"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-        <com.synnapps.carouselview.CarouselView
-            android:id="@+id/carouselviewPopUp"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:fillColor="@color/colorAccent"
-            app:pageColor="@color/colorAccentLow"
-            app:autoPlay="false"
-            app:radius="@dimen/radiusCarousel"
-            app:slideInterval="3000"
-            app:strokeWidth="@dimen/none"
-            />
-    </LinearLayout>
+        android:layout_marginRight="10dp"/>
+
+    <ImageView
+        android:layout_marginTop="15dp"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
+        android:background="@drawable/intro_4_image3"
+        android:layout_gravity="end"
+        android:layout_marginRight="45dp"/>
+
+
+    <ImageView
+        android:layout_width="125dp"
+        android:layout_height="125dp"
+        android:background="@drawable/intro_4_image1"
+        android:layout_gravity="start"
+        android:layout_marginLeft="45dp"/>
+
+    <ImageView
+        android:layout_width="125dp"
+        android:layout_height="125dp"
+        android:background="@drawable/intro_4_image4"
+        android:layout_gravity="end"
+        android:layout_marginRight="45dp"/>
+
+    <ImageView
+        android:layout_width="125dp"
+        android:layout_height="125dp"
+        android:background="@drawable/intro_4_image2"
+        android:layout_gravity="start"
+        android:layout_marginLeft="45dp"/>
 
 </LinearLayout>

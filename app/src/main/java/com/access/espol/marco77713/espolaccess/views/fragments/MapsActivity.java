@@ -1,6 +1,7 @@
 package com.access.espol.marco77713.espolaccess.views.fragments;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -10,16 +11,20 @@ import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.text.Spanned;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -56,6 +61,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.access.espol.marco77713.espolaccess.R.layout.info_popup;
 import static com.access.espol.marco77713.espolaccess.R.layout.see_or_evaluate;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -68,12 +74,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     double x2= 0.00001;
     double y1=-0.00014;
     double y2= 0.00014;
-    ArrayList<Objetos> listaobj = new ArrayList<Objetos>(); //*
+    private ArrayList<Objetos> listaobj = new ArrayList<Objetos>(); //*
     public ArrayList<String> edificios_evaluados = new ArrayList<>(); //*
     private static int RETICION_PERMISO_LOCALIZACION = 101;
     private double lat, lon;
     private String mensaje;
-    private boolean puedeEvaluar = false;
+    private boolean puedeEvaluar = true;
     int i =0; //*
 
 
@@ -82,17 +88,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private DatabaseReference myRef2;
-    User user; //*
+    private  User user; //*
     private List<Edificio> edificioList = new ArrayList<>();
-    Dialog myDialog;
+    private Dialog myDialog;
     public BottomNavigationView bottomBar;
-    ImageView imageView, imageViewInformation;
-    Toolbar toolbar;
-    SearchFragment searchFragment = new SearchFragment();
-    ProfileFragment profileFragment = new ProfileFragment(mAuth);
-    ChallengeFragment challengeFragment = new ChallengeFragment();
-
-
+    private ImageView imageView, imageViewInformation;
+    private Toolbar toolbar;
+    private SearchFragment searchFragment = new SearchFragment();
+    private ProfileFragment profileFragment = new ProfileFragment(mAuth);
+    private ChallengeFragment challengeFragment = new ChallengeFragment();
+    private FrameLayout frameLayout;
+    private Dialog infoDialog;
 
     @Override
     protected void onStart() {
@@ -116,74 +122,169 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         this.setViews();
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        this.setEvents();
 
-        imageView = (ImageView) findViewById(R.id.edificios_evaluados);
-        imageViewInformation = (ImageView) findViewById(R.id.information);
+        ConnectivityManager cm = (ConnectivityManager) getBaseContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        imageViewInformation.setOnClickListener(new View.OnClickListener(){
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+            //////////////////// LLAMADA A LA BASE DE DATOS 2
 
+            mAuth = FirebaseAuth.getInstance();
+            mAuthListener = new FirebaseAuth.AuthStateListener() {
+                @Override
+                public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                    if (firebaseAuth.getCurrentUser() == null) {
+                        startActivity(new Intent(MapsActivity.this, MainActivity.class));
+                    }
+                }
+            };
+
+        if (isConnected) {
+
+            myRef2 = database.getReference("users/" + String.valueOf(mAuth.getCurrentUser().getUid()));
+
+            myRef2.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    // This method is called once with the initial value and again
+                    // whenever data at this location is updated.
+                    System.out.println("QUE PASO " + dataSnapshot.getValue());
+                    user = dataSnapshot.getValue(User.class);
+                    System.out.println("" + user.getEdificios_evaluados().size());
+                    //mapFragment.edificios_evaluados = user.getEdificios_evaluados();
+
+                    switch (user.getEdificios_evaluados().size()) {
+                        case (1):
+                            imageView.setBackground(ContextCompat.getDrawable(getBaseContext(), R.drawable.edificios_evaluados0));
+                            break;
+                        case (2):
+                            imageView.setBackground(ContextCompat.getDrawable(getBaseContext(), R.drawable.edificios_evaluados1));
+                            break;
+                        case (3):
+                            imageView.setBackground(ContextCompat.getDrawable(getBaseContext(), R.drawable.edificios_evaluados2));
+                            break;
+                        case (4):
+                            imageView.setBackground(ContextCompat.getDrawable(getBaseContext(), R.drawable.edificios_evaluados3));
+                            break;
+                        case (5):
+                            imageView.setBackground(ContextCompat.getDrawable(getBaseContext(), R.drawable.edificios_evaluados4));
+                            break;
+
+
+                    }
+                    //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError error) {
+                    // Failed to read value
+                    System.out.println("Failed to read value." + error.toException());
+                }
+
+
+            });
+
+
+            ////////////////////LLAMADA A LA BASE DE DATOS
+
+
+            myDialog = new Dialog(this);
+            infoDialog = new Dialog(this);
+
+            miUbicacion();
+
+/*      Toast toast1=Toast.makeText(getApplicationContext(), "Prueba: "+listaobj, Toast.LENGTH_SHORT);
+        toast1.setGravity(Gravity.CENTER,10,10);
+        toast1.show();
+*/        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+            int estado = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
+            if (estado == ConnectionResult.SUCCESS) {
+
+                SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+
+                mapFragment.getMapAsync(this);
+            } else {
+                //Dialog mjs = GooglePlayServicesUtil.getErrorDialog(estado, (Activity) getApplicationContext(), 10);
+                //mjs.show();
+            }
+        }
+
+        else{
+            Toast.makeText(getBaseContext(), "No tienes acceso a internet, lo necesitas para hacer uso de la app", Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+    private void setFragment(Fragment fragment, Spanned html, ColorDrawable colorDrawable){
+        frameLayout.setVisibility(View.VISIBLE);
+
+        getImageViewInformation().setVisibility(View.INVISIBLE);
+        getImageView().setVisibility(View.INVISIBLE);
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .addToBackStack(null).commit();
+        getSupportActionBar().setBackgroundDrawable(colorDrawable);
+        getSupportActionBar().setTitle(html);
+        getSupportActionBar().show();
+
+    }
+
+    private void setEvents() {
+        this.getImageViewInformation().setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                imageViewInformation.setBackground(ContextCompat.getDrawable(getBaseContext(), R.drawable.info_button_pushed));
+                getImageViewInformation().setBackground(ContextCompat.getDrawable(getBaseContext(), R.drawable.info_button_pushed));
+
+
+                Button btnClose;
+                infoDialog.setContentView(info_popup);
+                btnClose = (Button) infoDialog.findViewById(R.id.btn_closeInfo);
+
+                btnClose.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        getImageViewInformation().setBackground(getResources().getDrawable(R.drawable.info_button));
+
+                        infoDialog.dismiss();
+                    }
+                });
+
+                infoDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                infoDialog.show();
             }
         });
 
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("");
-        getSupportActionBar().hide();
-        /*getSupportActionBar().setBackgroundDrawable(ContextCompat.getDrawable( this, R.drawable.btn_rounded));
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xFFFFFF));*/
-
-
-        bottomBar = (BottomNavigationView) findViewById(R.id.bottom_navigation);
-        //bottomBar.setDefaultTab(R.id.maps);
-
-        final FrameLayout frameLayout = (FrameLayout) findViewById(R.id.container);
-
-        bottomBar.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+        this.getBottomBar().setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @SuppressLint("ResourceAsColor")
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
                     case R.id.challenge:
-                        frameLayout.setVisibility(View.VISIBLE);
-
-                        getSupportFragmentManager().beginTransaction().replace(R.id.container, challengeFragment)
-                                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                                .addToBackStack(null).commit();
-                        //getSupportActionBar().setBackgroundDrawable(new ColorDrawable(R.color.editTextColorBlue));
-                        getSupportActionBar().setTitle("Perfil");
-                        getSupportActionBar().show();break;
+                        setFragment(getChallengeFragment(), Html.fromHtml("<font color='#ffffff'>Premios</font>"), new ColorDrawable(getResources().getColor(R.color.editTextColorBlue)));
+                        break;
                     case R.id.maps:
                         //getPuntos();
                         //MapsActivity mapsActivity = new MapsActivity();
                         //changeFragment(mapsActivity);
                         getSupportActionBar().hide();
                         frameLayout.setVisibility(View.INVISIBLE);
+                        getImageView().setVisibility(View.VISIBLE);
+                        getImageViewInformation().setVisibility(View.VISIBLE);
                         break;
                     case R.id.search:
-                        frameLayout.setVisibility(View.VISIBLE);
-
-                        getSupportFragmentManager().beginTransaction().replace(R.id.container, searchFragment)
-                                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                                .addToBackStack(null).commit();
-                        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
-                        getSupportActionBar().setTitle(Html.fromHtml("<font color='#333333'>Buscar</font>"));
-                        getSupportActionBar().show();
-                            /*intent.putExtra("tabSelected", R.id.search);
-                            startActivity(intent);
-                            tabId = R.id.maps;*/
+                        setFragment(getSearchFragment(), Html.fromHtml("<font color='#666666'>Buscar</font>"), new ColorDrawable(android.R.color.white));
                         break;
                     case R.id.profile:
-                        frameLayout.setVisibility(View.VISIBLE);
-                        profileFragment.userClass = user;
-                        getSupportFragmentManager().beginTransaction().replace(R.id.container, profileFragment)
-                                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                                .addToBackStack(null).commit();
-                        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.editTextColorBlue)));
-                        getSupportActionBar().setTitle(Html.fromHtml("<font color='#ffffff'>Perfil</font>"));
-                        getSupportActionBar().show();
+                        getProfileFragment().userClass = user;
+                        setFragment(getProfileFragment(), Html.fromHtml("<font color='#ffffff'>Perfil</font>"), new ColorDrawable(getResources().getColor(R.color.editTextColorBlue)));
                         break;
+
                 }
 
                 return true;
@@ -192,91 +293,24 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         bottomBar.setSelectedItemId(R.id.maps);
 
-        //////////////////// LLAMADA A LA BASE DE DATOS 2
+    }
 
-        mAuth = FirebaseAuth.getInstance();
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if (firebaseAuth.getCurrentUser() == null) {
-                    startActivity(new Intent(MapsActivity.this, MainActivity.class));
-                }
-            }
-        };
+    private void setViews() {
 
-        myRef2 = database.getReference("users/" + String.valueOf(mAuth.getCurrentUser().getUid()));
+        this.setToolbar((Toolbar) findViewById(R.id.toolbar));
+        setSupportActionBar(this.getToolbar());
+        getSupportActionBar().setTitle("");
+        getSupportActionBar().hide();
 
-        myRef2.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                System.out.println("QUE PASO " + dataSnapshot.getValue());
-                user = dataSnapshot.getValue(User.class);
-                System.out.println(""+user.getEdificios_evaluados());
-                //mapFragment.edificios_evaluados = user.getEdificios_evaluados();
+        this.setImageView((ImageView)findViewById(R.id.edificios_evaluados));
+        this.setImageViewInformation((ImageView) findViewById(R.id.information));
+        this.setBottomBar ((BottomNavigationView) findViewById(R.id.bottom_navigation));
 
-                switch (user.getEdificios_evaluados().size()){
-                    case (1):
-                        imageView.setBackground(ContextCompat.getDrawable(getBaseContext(), R.drawable.edificios_evaluados0));
-                        break;
-                    case (2):
-                        imageView.setBackground(ContextCompat.getDrawable(getBaseContext(), R.drawable.edificios_evaluados1));
-                        break;
-                    case (3):
-                        imageView.setBackground(ContextCompat.getDrawable(getBaseContext(), R.drawable.edificios_evaluados2));
-                        break;
-                    case (4):
-                        imageView.setBackground(ContextCompat.getDrawable(getBaseContext(), R.drawable.edificios_evaluados3));
-                        break;
-                    case (5):
-                        imageView.setBackground(ContextCompat.getDrawable(getBaseContext(), R.drawable.edificios_evaluados4));
-                        break;
-
-
-                }
-                //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                System.out.println("Failed to read value." + error.toException());
-            }
-
-
-
-        });
-
-
-
-
-        ////////////////////LLAMADA A LA BASE DE DATOS
-
-
-
-        myDialog = new Dialog(this);
-
-        miUbicacion();
-
-/*      Toast toast1=Toast.makeText(getApplicationContext(), "Prueba: "+listaobj, Toast.LENGTH_SHORT);
-        toast1.setGravity(Gravity.CENTER,10,10);
-        toast1.show();
-*/        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        int estado = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
-        if (estado == ConnectionResult.SUCCESS) {
-
-            SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-
-            mapFragment.getMapAsync(this);
-        } else {
-            //Dialog mjs = GooglePlayServicesUtil.getErrorDialog(estado, (Activity) getApplicationContext(), 10);
-            //mjs.show();
-        }
+        frameLayout = (FrameLayout) findViewById(R.id.container);
 
 
     }
+
     private void llenarUbicacion(){
 
         for(Edificio edificio : edificioList){
@@ -365,7 +399,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 btn2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        System.out.println("NO TE DETENTGAS " + user.getEdificios_evaluados().size());
                         Intent intent = new Intent(myDialog.getContext(), EvaluationActivity.class);
                         intent.putExtra("user", mAuth.getCurrentUser().getUid());
                         intent.putExtra("edificio", m.getTitle());
@@ -527,4 +561,259 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    public GoogleMap getmMap() {
+        return mMap;
+    }
+
+    public void setmMap(GoogleMap mMap) {
+        this.mMap = mMap;
+    }
+
+    public Marker getPrueba() {
+        return prueba;
+    }
+
+    public void setPrueba(Marker prueba) {
+        this.prueba = prueba;
+    }
+
+    public double getX1() {
+        return x1;
+    }
+
+    public void setX1(double x1) {
+        this.x1 = x1;
+    }
+
+    public double getX2() {
+        return x2;
+    }
+
+    public void setX2(double x2) {
+        this.x2 = x2;
+    }
+
+    public double getY1() {
+        return y1;
+    }
+
+    public void setY1(double y1) {
+        this.y1 = y1;
+    }
+
+    public double getY2() {
+        return y2;
+    }
+
+    public void setY2(double y2) {
+        this.y2 = y2;
+    }
+
+    public ArrayList<Objetos> getListaobj() {
+        return listaobj;
+    }
+
+    public void setListaobj(ArrayList<Objetos> listaobj) {
+        this.listaobj = listaobj;
+    }
+
+    public ArrayList<String> getEdificios_evaluados() {
+        return edificios_evaluados;
+    }
+
+    public void setEdificios_evaluados(ArrayList<String> edificios_evaluados) {
+        this.edificios_evaluados = edificios_evaluados;
+    }
+
+    public static int getReticionPermisoLocalizacion() {
+        return RETICION_PERMISO_LOCALIZACION;
+    }
+
+    public static void setReticionPermisoLocalizacion(int reticionPermisoLocalizacion) {
+        RETICION_PERMISO_LOCALIZACION = reticionPermisoLocalizacion;
+    }
+
+    public double getLat() {
+        return lat;
+    }
+
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
+
+    public double getLon() {
+        return lon;
+    }
+
+    public void setLon(double lon) {
+        this.lon = lon;
+    }
+
+    public String getMensaje() {
+        return mensaje;
+    }
+
+    public void setMensaje(String mensaje) {
+        this.mensaje = mensaje;
+    }
+
+    public boolean isPuedeEvaluar() {
+        return puedeEvaluar;
+    }
+
+    public void setPuedeEvaluar(boolean puedeEvaluar) {
+        this.puedeEvaluar = puedeEvaluar;
+    }
+
+    public int getI() {
+        return i;
+    }
+
+    public void setI(int i) {
+        this.i = i;
+    }
+
+    public FirebaseDatabase getDatabase() {
+        return database;
+    }
+
+    public void setDatabase(FirebaseDatabase database) {
+        this.database = database;
+    }
+
+    public DatabaseReference getMyRef() {
+        return myRef;
+    }
+
+    public void setMyRef(DatabaseReference myRef) {
+        this.myRef = myRef;
+    }
+
+    public FirebaseAuth getmAuth() {
+        return mAuth;
+    }
+
+    public void setmAuth(FirebaseAuth mAuth) {
+        this.mAuth = mAuth;
+    }
+
+    public FirebaseAuth.AuthStateListener getmAuthListener() {
+        return mAuthListener;
+    }
+
+    public void setmAuthListener(FirebaseAuth.AuthStateListener mAuthListener) {
+        this.mAuthListener = mAuthListener;
+    }
+
+    public DatabaseReference getMyRef2() {
+        return myRef2;
+    }
+
+    public void setMyRef2(DatabaseReference myRef2) {
+        this.myRef2 = myRef2;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public List<Edificio> getEdificioList() {
+        return edificioList;
+    }
+
+    public void setEdificioList(List<Edificio> edificioList) {
+        this.edificioList = edificioList;
+    }
+
+    public Dialog getMyDialog() {
+        return myDialog;
+    }
+
+    public void setMyDialog(Dialog myDialog) {
+        this.myDialog = myDialog;
+    }
+
+    public BottomNavigationView getBottomBar() {
+        return bottomBar;
+    }
+
+    public void setBottomBar(BottomNavigationView bottomBar) {
+        this.bottomBar = bottomBar;
+    }
+
+    public ImageView getImageView() {
+        return imageView;
+    }
+
+    public void setImageView(ImageView imageView) {
+        this.imageView = imageView;
+    }
+
+    public ImageView getImageViewInformation() {
+        return imageViewInformation;
+    }
+
+    public void setImageViewInformation(ImageView imageViewInformation) {
+        this.imageViewInformation = imageViewInformation;
+    }
+
+    public Toolbar getToolbar() {
+        return toolbar;
+    }
+
+    public void setToolbar(Toolbar toolbar) {
+        this.toolbar = toolbar;
+    }
+
+    public SearchFragment getSearchFragment() {
+        return searchFragment;
+    }
+
+    public void setSearchFragment(SearchFragment searchFragment) {
+        this.searchFragment = searchFragment;
+    }
+
+    public ProfileFragment getProfileFragment() {
+        return profileFragment;
+    }
+
+    public void setProfileFragment(ProfileFragment profileFragment) {
+        this.profileFragment = profileFragment;
+    }
+
+    public ChallengeFragment getChallengeFragment() {
+        return challengeFragment;
+    }
+
+    public void setChallengeFragment(ChallengeFragment challengeFragment) {
+        this.challengeFragment = challengeFragment;
+    }
+
+    public LocationListener getLocListener() {
+        return locListener;
+    }
+
+    public void setLocListener(LocationListener locListener) {
+        this.locListener = locListener;
+    }
+
+    public FrameLayout getFrameLayout() {
+        return frameLayout;
+    }
+
+    public void setFrameLayout(FrameLayout frameLayout) {
+        this.frameLayout = frameLayout;
+    }
+
+    public Dialog getInfoDialog() {
+        return infoDialog;
+    }
+
+    public void setInfoDialog(Dialog infoDialog) {
+        this.infoDialog = infoDialog;
+    }
 }

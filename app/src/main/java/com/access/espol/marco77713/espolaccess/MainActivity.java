@@ -1,6 +1,9 @@
 package com.access.espol.marco77713.espolaccess;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -41,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
 
         super.onStart();
+
         mAuth.addAuthStateListener(mAuthListner);
 
     }
@@ -52,9 +56,15 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
+        ConnectivityManager cm = (ConnectivityManager) getBaseContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        final boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+
         FirebaseApp.initializeApp(this);
         mAuth = FirebaseAuth.getInstance();
-
         //check the current user - EVALUA SI ALGUIEN YA ESTA LOGGEADO
         if (mAuth.getCurrentUser() != null) {
             startActivity(new Intent(MainActivity.this, MapsActivity.class));
@@ -75,24 +85,32 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+
         // Checking the email id and password is Empty
         ahlogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (isConnected){
+                ahlogin.setEnabled(false);
+                ahlogin.setBackground(getResources().getDrawable(R.drawable.btn_rounded_pushed));
                 String email = inputEmail.getText().toString();
                 final String password = inputPassword.getText().toString();
                 //ahlogin.setBackground(R.drawable.);
                 if (TextUtils.isEmpty(email)) {
                     Toast.makeText(getApplicationContext(), "Ingresa correo electrónico", Toast.LENGTH_SHORT).show();
+                    ahlogin.setEnabled(true);
+                    ahlogin.setBackground(getResources().getDrawable(R.drawable.btn_rounded));
                     return;
                 }
                 if (TextUtils.isEmpty(password)) {
                     Toast.makeText(getApplicationContext(), "Ingresa contraseña", Toast.LENGTH_SHORT).show();
+                    ahlogin.setEnabled(true);
+                    ahlogin.setBackground(getResources().getDrawable(R.drawable.btn_rounded));
                     return;
                 }
 
                 progressBar.setVisibility(View.VISIBLE);
-
+ //ASYNCTASK
 
                 //authenticate user
                 mAuth.signInWithEmailAndPassword(email, password)
@@ -112,13 +130,20 @@ public class MainActivity extends AppCompatActivity {
                                 } else {
                                     Log.d(TAG, "singInWithEmail:Fail");
                                     Toast.makeText(MainActivity.this, getString(R.string.failed), Toast.LENGTH_LONG).show();
+                                    ahlogin.setEnabled(true);
+                                    ahlogin.setBackground(getResources().getDrawable(R.drawable.btn_rounded));
                                 }
                             }
 
                         });
-            }
 
+                }
+                else{
+                    Toast.makeText(getBaseContext(), "No tienes acceso a internet, lo necesitas para hacer uso de la app", Toast.LENGTH_LONG).show();
+                }
+                }
         });
+
 
 
         mAuthListner = new FirebaseAuth.AuthStateListener() {
@@ -131,6 +156,8 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
+
     }
+
 
 }

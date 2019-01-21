@@ -1,6 +1,9 @@
 package com.access.espol.marco77713.espolaccess.views.fragments;
 
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -57,36 +60,46 @@ public class SearchFragment extends Fragment  implements SearchView.OnQueryTextL
         View view = inflater.inflate(R.layout.fragment_search, container, false);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.builds);
+        ConnectivityManager cm = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        // Read from the database
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                edificioList.clear();
-                buildRowsList.clear();
-                for (DataSnapshot snap: dataSnapshot.getChildren()) {
-                    Edificio edificio = snap.getValue(Edificio.class);
-                    edificioList.add(edificio);
-                    System.out.println("Value is: " + edificioList);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        if(isConnected) {
+            // Read from the database
+            myRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    // This method is called once with the initial value and again
+                    // whenever data at this location is updated.
+                    edificioList.clear();
+                    buildRowsList.clear();
+                    for (DataSnapshot snap : dataSnapshot.getChildren()) {
+                        Edificio edificio = snap.getValue(Edificio.class);
+                        edificioList.add(edificio);
+                        System.out.println("Value is: " + edificioList);
+                    }
+                    prepareBuilsData();
+
+                    sAdapter = new SearcherAdapter(buildRowsList, getContext());
+                    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+                    recyclerView.setLayoutManager(mLayoutManager);
+                    recyclerView.setItemAnimator(new DefaultItemAnimator());
+                    recyclerView.setAdapter(sAdapter);
                 }
-                prepareBuilsData();
 
-                sAdapter = new SearcherAdapter(buildRowsList, getContext());
-                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
-                recyclerView.setLayoutManager(mLayoutManager);
-                recyclerView.setItemAnimator(new DefaultItemAnimator());
-                recyclerView.setAdapter(sAdapter);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                System.out.println("Failed to read value." + error.toException());
-            }
-        });
-
+                @Override
+                public void onCancelled(DatabaseError error) {
+                    // Failed to read value
+                    System.out.println("Failed to read value." + error.toException());
+                }
+            });
+        }
+        else
+        {
+            Toast.makeText(getContext(), "No tienes acceso a internet, lo necesitas para hacer uso de la app", Toast.LENGTH_LONG).show();
+        }
         setHasOptionsMenu(true);
 
         return view;

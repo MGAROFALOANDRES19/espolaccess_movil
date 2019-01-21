@@ -2,7 +2,10 @@ package com.access.espol.marco77713.espolaccess.views.fragments;
 
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -57,6 +60,12 @@ public class ProfileFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
 
+        ConnectivityManager cm = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        final boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
 
         email = (TextView) view.findViewById(R.id.email);
         personalizacion = (RadioGroup) view.findViewById(R.id.personalizacion);
@@ -90,19 +99,25 @@ public class ProfileFragment extends Fragment {
                     System.out.println("onAuthStateChanged:signed_in:" + user.getUid());
                     System.out.println("Successfully signed in with: " + user.getEmail());
                     email.setText(user.getEmail());
-                    switch (userClass.getPersonalizacion()){
-                        case (0):
-                            r1.setChecked(true);
-                            break;
 
-                        case (1):
-                            r2.setChecked(true);
-                            break;
+                    if(isConnected) {
+                        switch (userClass.getPersonalizacion()) {
+                            case (0):
+                                r1.setChecked(true);
+                                break;
 
-                        case (2):
-                            r3.setChecked(true);
-                            break;
+                            case (1):
+                                r2.setChecked(true);
+                                break;
 
+                            case (2):
+                                r3.setChecked(true);
+                                break;
+
+                        }
+                    }
+                    else{
+                        toastMessage("No tienes acceso a internet, lo necesitas para utilizar la app");
                     }
 
                 } else {
@@ -135,6 +150,9 @@ public class ProfileFragment extends Fragment {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+
+                if(isConnected) {
                 btnSave.setEnabled(false);
                 btnSave.setTextColor(Color.parseColor("#7f7b6d"));
                 btnSave.setBackground(getResources().getDrawable(R.drawable.btn_rounded_pushed));
@@ -168,6 +186,10 @@ public class ProfileFragment extends Fragment {
                     toastMessage("Fill out all the fields");
                 }
             }
+            else
+            {
+                toastMessage("No tienes acceso a internet, lo necesitas para hacer uso de la app");
+            }}
         });
 
         return view;

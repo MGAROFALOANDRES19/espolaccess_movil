@@ -50,7 +50,7 @@
                     android:id="@+id/input_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/hint_password"
+                    android:hint="Contraseña (mínimo 6 caracteres)"
                     android:inputType="textPassword"
                     android:drawableLeft="@drawable/vectores_18"
                     android:drawablePadding="10dp"/>
@@ -59,16 +59,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/btn_join"
-                android:theme="@style/RaisedButtonDark"
+                android:background="@drawable/btn_rounded"
+                android:textColor="@color/colorPrimary"
+                android:textAllCaps="false"
                 />
             <TextView
+                android:layout_marginTop="30dp"
                 android:id="@+id/login_page"
-                android:layout_width="fill_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
                 android:gravity="center"
-                android:text="¿Ya tienes cuenta? Iniciar Sesión"
-                android:textSize="16dip" />
+                android:text="¿Ya tienes cuenta? Iniciar sesión"
+                android:textSize="16dip"
+                android:background="@drawable/text_lines"
+                android:layout_gravity="center"/>
         </LinearLayout>
     </ScrollView>
     <ProgressBar
