@@ -27,6 +27,22 @@ public class Objetos {
         this.resultado_accesbilidad = resultado_accesibilidad;
     }
 
+    @Override
+    public String toString() {
+        return "Objetos{" +
+                "nombre='" + nombre + '\'' +
+                ", icono='" + icono + '\'' +
+                ", latitud=" + latitud +
+                ", longitud=" + longitud +
+                ", estado=" + estado +
+                ", resultado_accesbilidad=" + resultado_accesbilidad +
+                '}';
+    }
+
+    public Objetos() {
+
+    }
+
     public String getNombre() {
         return nombre;
     }

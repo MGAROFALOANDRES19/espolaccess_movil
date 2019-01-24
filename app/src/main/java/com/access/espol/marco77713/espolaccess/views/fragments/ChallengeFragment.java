@@ -89,7 +89,7 @@ public class ChallengeFragment extends Fragment {
 
                     prepareUsersData();
 
-                    pAdapter = new PositionAdapter(posicionsList);
+                    pAdapter = new PositionAdapter(posicionsList, getContext(), usersList);
                     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
                     recyclerView.setLayoutManager(mLayoutManager);
                     recyclerView.setItemAnimator(new DefaultItemAnimator());

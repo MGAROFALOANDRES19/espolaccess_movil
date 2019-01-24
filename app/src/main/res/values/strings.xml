@@ -62,4 +62,5 @@
     <string name="acercandose">Acercándose al edificio</string>
     <string name="jump">Saltar</string>
     <string name="next"><![CDATA[Siguiente   >]]></string>
+    <string name="cancel"><![CDATA[<    Cancelar]]></string>
 </resources>

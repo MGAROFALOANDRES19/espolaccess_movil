@@ -14,16 +14,20 @@ import android.widget.Button;
 
 import com.access.espol.marco77713.espolaccess.MainActivity;
 import com.access.espol.marco77713.espolaccess.R;
+import com.access.espol.marco77713.espolaccess.views.fragments.intro.Intro0Fragment;
 import com.access.espol.marco77713.espolaccess.views.fragments.intro.Intro1Fragment;
 import com.access.espol.marco77713.espolaccess.views.fragments.intro.Intro2Fragment;
 import com.access.espol.marco77713.espolaccess.views.fragments.intro.Intro3Fragment;
 import com.access.espol.marco77713.espolaccess.views.fragments.intro.Intro4Fragment;
+import com.access.espol.marco77713.espolaccess.views.fragments.intro.Intro_1Fragment;
 
 
 public class IntroductionActivity extends /*AppIntro*/ AppCompatActivity {
 
-    Button btnJump, btnNext;
-int contIntro = 1;
+    Button btnJump, btnNext, btnClose;
+int contIntro = 0;
+    Intro0Fragment intro0Fragment;
+    Intro_1Fragment intro_1Fragment;
     Intro1Fragment intro1Fragment;
     Intro2Fragment intro2Fragment;
     Intro3Fragment intro3Fragment;
@@ -43,8 +47,10 @@ int contIntro = 1;
         intro2Fragment = new Intro2Fragment();
         intro3Fragment = new Intro3Fragment();
         intro4Fragment = new Intro4Fragment();
+        intro0Fragment = new Intro0Fragment();
+        intro_1Fragment = new Intro_1Fragment();
 
-        this.setFragmentIntro(intro1Fragment, "Saltar");
+        this.setFragmentIntro(intro0Fragment, "Informar");
 //CON ESTO SOLO CORRE UNA VEZ LA ACTIVIDAD
         SharedPreferences pref = getSharedPreferences("ActivityPREF", Context.MODE_PRIVATE);
         if(pref.getBoolean("activity_executed", false)){
@@ -79,6 +85,7 @@ int contIntro = 1;
     private void setViews() {
         btnJump = (Button) findViewById(R.id.jump);
         btnNext = (Button) findViewById(R.id.next);
+        btnClose = (Button) findViewById(R.id.close_credits);
 System.out.println(btnJump);
     }
 
@@ -119,6 +126,17 @@ System.out.println(btnJump);
     private void setFragmentIntro(Fragment fragment, String saltar) {
         btnJump.setTag(saltar);
         btnJump.setText(saltar);
+
+        if (saltar == "Cerrar"){
+            btnNext.setVisibility(View.INVISIBLE);
+            btnJump.setVisibility(View.INVISIBLE);
+            btnClose.setVisibility(View.VISIBLE);
+        }
+        else {
+            btnNext.setVisibility(View.VISIBLE);
+            btnJump.setVisibility(View.VISIBLE);
+            btnClose.setVisibility(View.INVISIBLE);
+        }
         getSupportFragmentManager().beginTransaction().replace(R.id.container_intro, fragment)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .addToBackStack(null).commit();
@@ -134,13 +152,31 @@ System.out.println(btnJump);
             contIntro--;
             this.setSlide(contIntro);
         }
+        else if(view.getTag().equals("Informar")){
+            contIntro = 5;
+            this.setSlide(contIntro);
+        }
+        else if(view.getTag().equals("Cerrar")){
+            contIntro = 0;
+            this.setSlide(contIntro);
+        }
         this.setEnabled(this.btnJump);
     }
 
     private void setSlide(int contIntro) {
 
 
-        if (contIntro == 1){
+        if (contIntro == 0){
+
+            this.setFragmentIntro(intro0Fragment, "Informar");
+
+        }
+        else if (contIntro == 5){
+
+            this.setFragmentIntro(intro_1Fragment, "Cerrar");
+
+        }
+        else if (contIntro == 1){
 
             this.setFragmentIntro(intro1Fragment, "Saltar");
 

@@ -25,8 +25,8 @@ import java.util.ArrayList;
 public class QuestionFragment extends Fragment{
 
     TextView txtQuestion;
-    Button btn1, btn2, btn3;
-    ImageView img;
+    Button btn1, btn2;
+    ImageView img, img_info_ques;
     Button btnNext;
 
     public Pregunta pregunta;
@@ -67,6 +67,15 @@ public class QuestionFragment extends Fragment{
 
         btn1 = (Button) view.findViewById(R.id.ask1);
         btn2 = (Button) view.findViewById(R.id.ask2);
+        img_info_ques = (ImageView) view.findViewById(R.id.info_question);
+
+        img_info_ques.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
         btnNext = getActivity().findViewById(R.id.next);
         btn1.setText(pregunta.getOpcion1());
         btn1.setOnClickListener(new View.OnClickListener() {
@@ -111,7 +120,7 @@ public class QuestionFragment extends Fragment{
         btnTmp2.setBackground(getResources().getDrawable(R.drawable.btn_rounded));
 
         btnNext.setEnabled(true );
-        btnNext.setBackground(getResources().getDrawable(R.drawable.next_arrow_button));
+        btnNext.setBackground(getResources().getDrawable(R.drawable.btn_rounded));
 
     }
 

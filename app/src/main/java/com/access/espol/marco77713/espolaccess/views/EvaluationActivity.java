@@ -5,16 +5,24 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.constraint.solver.widgets.Snapshot;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.access.espol.marco77713.espolaccess.R;
+import com.access.espol.marco77713.espolaccess.adapter.AccesibilityAdapter;
+import com.access.espol.marco77713.espolaccess.model.Edificio;
 import com.access.espol.marco77713.espolaccess.model.Pregunta;
 import com.access.espol.marco77713.espolaccess.model.Validacion;
 import com.access.espol.marco77713.espolaccess.views.fragments.MapsActivity;
@@ -31,6 +39,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +65,8 @@ public class EvaluationActivity extends AppCompatActivity {
 
     FrameLayout frameLayout;
     Drawable drawable;
+
+    ArrayList<Integer> respuestas = new ArrayList<Integer>();
 
     int i;
 
@@ -128,7 +139,7 @@ public class EvaluationActivity extends AppCompatActivity {
         if(btnPrev.getTag().equals("Cancelar")){
             System.out.println("PILAS");
             this.finish();
-            btnPrev.setBackground(getResources().getDrawable(R.drawable.prev_arrow_button_pushed));
+            btnPrev.setBackground(getResources().getDrawable(R.drawable.btn_rounded_pushed));
             //startActivity(new Intent(EvaluationActivity.this, MapsActivity.class));
         }
 
@@ -146,7 +157,7 @@ public class EvaluationActivity extends AppCompatActivity {
 
             if(isConnected) {
                 contPreguntas = 0;
-                btnNext.setBackground(getResources().getDrawable(R.drawable.next_arrow_button_pushed));
+                btnNext.setBackground(getResources().getDrawable(R.drawable.btn_rounded_pushed));
                 btnNext.setTag("Next");
                 btnNext.setEnabled(false);
                 btnPrev.setVisibility(View.INVISIBLE);
@@ -164,7 +175,7 @@ public class EvaluationActivity extends AppCompatActivity {
 
         else if(btnNext.getTag().equals("Next")){
 
-            btnNext.setBackground(getResources().getDrawable(R.drawable.next_arrow_button_pushed));
+            btnNext.setBackground(getResources().getDrawable(R.drawable.btn_rounded_pushed));
             btnNext.setEnabled(false);
             System.out.println("Contador de preguntas: " + contPreguntas);
 
@@ -179,7 +190,6 @@ public class EvaluationActivity extends AppCompatActivity {
         }
 
         else if (btnNext.getTag().equals("Acabar")){
-            ArrayList<Integer> respuestas = new ArrayList<Integer>();
             for (QuestionFragment q: questionFragments){
                 respuestas.add(q.pregunta.getRespuesta());
             }
@@ -193,6 +203,7 @@ public class EvaluationActivity extends AppCompatActivity {
             Validacion validacion = new Validacion(currentUser, edificio, respuestas);
             myRef2.child("validaciones").push().setValue(validacion);
 
+            new  AsyncCaller().execute();
 
             /*Query query = myRef2.child("validaciones").orderByChild("edificio").equalTo(edificio);
 
@@ -218,8 +229,9 @@ public class EvaluationActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().replace(R.id.container, winShareFragment)
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                     .addToBackStack(null).commit();
-
+            btnNext.setText("");
             btnNext.setBackground(getResources().getDrawable(R.drawable.social_button));
+
             btnNext.setTag("share");
         }
 
@@ -228,5 +240,91 @@ public class EvaluationActivity extends AppCompatActivity {
             toast.show();
         }
     }
+
+    private class AsyncCaller extends AsyncTask<Void, Void, Void>
+    {
+
+        List<Validacion> validacionList = new ArrayList<>();
+        int r1=0, r2=0, r3=0, r4=0, r5=0;
+        List<Integer> rs = new ArrayList<>();
+        @Override
+        protected Void doInBackground(Void...voids) {
+
+            Query query = myRef2.child("validaciones").orderByChild("edificio").equalTo(edificio);
+
+            query.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    System.out.println(dataSnapshot.getChildrenCount());
+                    for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                        System.out.println(snapshot);
+                        validacionList.add(snapshot.getValue(Validacion.class));
+                    }
+
+                    validacionList.add(new Validacion(currentUser, edificio, respuestas));
+
+                    setPuntuationToTheBuilding(validacionList);
+                }
+
+                private void setPuntuationToTheBuilding(List<Validacion> validacionList) {
+
+                    for (Validacion validacion: validacionList){
+                        r1+=validacion.getRespuestas().get(0);
+                        r2+=validacion.getRespuestas().get(1);
+                        r3+=validacion.getRespuestas().get(2);
+                        r4+=validacion.getRespuestas().get(3);
+                        r5+=validacion.getRespuestas().get(4);
+                    }
+
+                    rs.add(r1);
+                    rs.add(r2);
+                    rs.add(r3);
+                    rs.add(r4);
+                    rs.add(r5);
+
+                    if (r1/validacionList.size() == 0)
+                        myRef2.child("edificios").child(edificio).child("parqueaderos").setValue(false);
+                    else
+                        myRef2.child("edificios").child(edificio).child("parqueaderos").setValue(true);
+                    if (r2/validacionList.size() == 0)
+                        myRef2.child("edificios").child(edificio).child("rampas").setValue(false);
+                    else
+                        myRef2.child("edificios").child(edificio).child("rampas").setValue(true);
+                    if (r3/validacionList.size() == 0)
+                        myRef2.child("edificios").child(edificio).child("banos_discapacidad").setValue(false);
+                    else
+                        myRef2.child("edificios").child(edificio).child("banos_discapacidad").setValue(true);
+                    if (r4/validacionList.size() == 0)
+                        myRef2.child("edificios").child(edificio).child("ascensor").setValue(false);
+                    else
+                        myRef2.child("edificios").child(edificio).child("ascensor").setValue(true);
+                    if (r5/validacionList.size() == 0)
+                        myRef2.child("edificios").child(edificio).child("mesa").setValue(false);
+                    else
+                        myRef2.child("edificios").child(edificio).child("mesa").setValue(true);
+
+                    if(Collections.frequency(rs, 0) < 3){
+                        myRef2.child("edificios").child(edificio).child("resultado_accesibilidad").setValue(1);
+                    }
+                    else if(Collections.frequency(rs, 0) < 5){
+                        myRef2.child("edificios").child(edificio).child("resultado_accesibilidad").setValue(2);
+                    }
+                    else if(Collections.frequency(rs, 0) == 5){
+                        myRef2.child("edificios").child(edificio).child("resultado_accesibilidad").setValue(3);
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+            return null;
+        }
+
+    }
+
 
 }

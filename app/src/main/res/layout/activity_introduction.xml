@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/introduction"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".views.IntroductionActivity"
@@ -23,11 +24,10 @@
             android:layout_height="wrap_content"
             android:background="@drawable/btn_rounded"
             android:textAllCaps="false"
-            android:text="@string/jump"
+            android:text="Créditos"
             android:textColor="@android:color/white"
-            android:tag="@string/jump"
+            android:tag="Informar"
             android:onClick="jumpIntro"
-            android:layout_marginRight="5dp"
             />
         <Button
             android:id="@+id/next"
@@ -42,4 +42,19 @@
             android:onClick="nextSlide"
             />
     </LinearLayout>
+    <Button
+        android:id="@+id/close_credits"
+        android:layout_weight=".5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_rounded"
+        android:textAllCaps="false"
+        android:text="Cerrar"
+        android:tag="Cerrar"
+        android:textColor="@android:color/white"
+        android:onClick="jumpIntro"
+        android:layout_alignParentBottom="true"
+        android:visibility="invisible"
+        />
+
 </RelativeLayout>

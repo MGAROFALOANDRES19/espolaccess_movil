@@ -13,6 +13,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -31,6 +32,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
 
 import com.access.espol.marco77713.espolaccess.MainActivity;
 import com.access.espol.marco77713.espolaccess.R;
@@ -39,6 +41,7 @@ import com.access.espol.marco77713.espolaccess.model.Objetos;
 import com.access.espol.marco77713.espolaccess.model.User;
 import com.access.espol.marco77713.espolaccess.views.BuildingActivity;
 import com.access.espol.marco77713.espolaccess.views.EvaluationActivity;
+import com.access.espol.marco77713.espolaccess.views.IntroductionActivity;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdate;
@@ -70,17 +73,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private GoogleMap mMap;
     private Marker prueba; //*
-    double x1=-0.00001;//solo cambiar penultimo digito 115 => 125 OJO 195
-    double x2= 0.00001;
-    double y1=-0.00014;
-    double y2= 0.00014;
+    double x1=-0.00002;//solo cambiar penultimo digito 115 => 125 OJO 195
+    double x2= 0.00002;
+    double y1=-0.00001;
+    double y2= 0.00020;
     private ArrayList<Objetos> listaobj = new ArrayList<Objetos>(); //*
     public ArrayList<String> edificios_evaluados = new ArrayList<>(); //*
     private static int RETICION_PERMISO_LOCALIZACION = 101;
     private double lat, lon;
     private String mensaje;
-    private boolean puedeEvaluar = true;
+    private boolean puedeEvaluar = false;
     int i =0; //*
+    Boolean x1_l = false, x2_l = false, y1_l = false, y2_l = false;
 
 
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -143,50 +147,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         if (isConnected) {
 
-            myRef2 = database.getReference("users/" + String.valueOf(mAuth.getCurrentUser().getUid()));
 
-            myRef2.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    // This method is called once with the initial value and again
-                    // whenever data at this location is updated.
-                    System.out.println("QUE PASO " + dataSnapshot.getValue());
-                    user = dataSnapshot.getValue(User.class);
-                    System.out.println("" + user.getEdificios_evaluados().size());
-                    //mapFragment.edificios_evaluados = user.getEdificios_evaluados();
-
-                    switch (user.getEdificios_evaluados().size()) {
-                        case (1):
-                            imageView.setBackground(ContextCompat.getDrawable(getBaseContext(), R.drawable.edificios_evaluados0));
-                            break;
-                        case (2):
-                            imageView.setBackground(ContextCompat.getDrawable(getBaseContext(), R.drawable.edificios_evaluados1));
-                            break;
-                        case (3):
-                            imageView.setBackground(ContextCompat.getDrawable(getBaseContext(), R.drawable.edificios_evaluados2));
-                            break;
-                        case (4):
-                            imageView.setBackground(ContextCompat.getDrawable(getBaseContext(), R.drawable.edificios_evaluados3));
-                            break;
-                        case (5):
-                            imageView.setBackground(ContextCompat.getDrawable(getBaseContext(), R.drawable.edificios_evaluados4));
-                            break;
-
-
-                    }
-                    //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError error) {
-                    // Failed to read value
-                    System.out.println("Failed to read value." + error.toException());
-                }
-
-
-            });
-
+            new AsyncCaller().execute();
 
             ////////////////////LLAMADA A LA BASE DE DATOS
 
@@ -234,7 +196,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void setEvents() {
-        this.getImageViewInformation().setOnClickListener(new View.OnClickListener(){
+
+        this.getImageView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setFragment(getChallengeFragment(), Html.fromHtml("<font color='#ffffff'>Premios</font>"), new ColorDrawable(getResources().getColor(R.color.editTextColorBlue)));
+                startActivity(new Intent(MapsActivity.this, IntroductionActivity.class));
+                finish();
+            }
+        });
+
+        /*this.getImageViewInformation().setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 getImageViewInformation().setBackground(ContextCompat.getDrawable(getBaseContext(), R.drawable.info_button_pushed));
@@ -259,7 +231,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 infoDialog.show();
             }
         });
-
+*/
         this.getBottomBar().setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @SuppressLint("ResourceAsColor")
             @Override
@@ -278,7 +250,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         getImageViewInformation().setVisibility(View.VISIBLE);
                         break;
                     case R.id.search:
-                        setFragment(getSearchFragment(), Html.fromHtml("<font color='#666666'>Buscar</font>"), new ColorDrawable(android.R.color.white));
+                        setFragment(getSearchFragment(), Html.fromHtml("<font color='#3333'>Buscar aquí...</font>"), new ColorDrawable(getResources().getColor(R.color.white)));
                         break;
                     case R.id.profile:
                         getProfileFragment().userClass = user;
@@ -314,7 +286,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void llenarUbicacion(){
 
         for(Edificio edificio : edificioList){
-            listaobj.add(new Objetos(edificio.getNombre(),edificio.getLatitud(),edificio.getLongitud(),true,edificio.getResultado_accesibilidad()));
+            listaobj.add(new Objetos(edificio.getNombre(),edificio.getLatitud(),edificio.getLongitud(),false,edificio.getResultado_accesibilidad()));
         }
 
 
@@ -342,7 +314,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 prueba = mMap.addMarker(new MarkerOptions().position(a).title(ob.nombre).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_medianamente_accesible)));
             }
             else if(ob.resultado_accesbilidad == 3){ //CAMBIO DE IMAGEN
-                prueba = mMap.addMarker(new MarkerOptions().position(a).title(ob.nombre).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_evaluado)));
+                prueba = mMap.addMarker(new MarkerOptions().position(a).title(ob.nombre).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_accesible)));
             }
         }
     }
@@ -406,11 +378,22 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         intent.putExtra("n_edificios_evaluados", user.getEdificios_evaluados().size());
                         intent.putExtra("user_puntos", user.getPuntos());
 
-                        if(puedeEvaluar){
-                            startActivity(intent);
-                        }
-                        else{
-                            Toast.makeText(getBaseContext(), "Acercate a la ubicacion para evaluar", Toast.LENGTH_LONG).show();
+                        for(Objetos ob:listaobj){
+                            if (ob.getNombre().equals(m.getTitle())){
+                                if(ob.estado){
+                                    startActivity(intent);
+                                    x1_l = false;
+                                    x2_l = false;
+                                    y1_l = false;
+                                    y2_l = false;
+                                    ob.estado = false;
+                                    puedeEvaluar = false;
+                                }
+                                else{
+                                    Toast.makeText(getBaseContext(), "Acercate a la ubicacion para evaluar", Toast.LENGTH_LONG).show();
+                                }
+
+                            }
                         }
 
                         myDialog.dismiss();
@@ -441,31 +424,68 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             return;
         }
         mMap.setMyLocationEnabled(true);
+
         mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
 
             @Override
             public void onMyLocationChange(Location loc) {
-
                 final LatLng x = new LatLng(loc.getLatitude(), loc.getLongitude());
+
                 LatLng dir;
                 for(Objetos ob:listaobj) {
+
                     dir = new LatLng(ob.latitud, ob.longitud);
-                    if (ob.estado) {
+                    if (!ob.estado && !puedeEvaluar) {
                         double lat = dir.latitude;
                         double lon = dir.longitude; //Metodo para radios cruzados
-                        if ((loc.getLatitude() > lat + x1 && lat + x2 > loc.getLatitude()) && (loc.getLongitude() > lon + y1 && lon + y2 > loc.getLongitude())) {
+
+
+/*
+                        if (!x1_l) {
+                            if (loc.getLatitude() > lat + x1) {
+                                x1_l = true;
+                                System.out.println("ENTRAMOS1 " + ob);
+                                objetos_name.add(ob.getNombre());
+                            }
+                        }
+
+                        if (!x2_l) {
+                            if (lat + x2 > loc.getLatitude()) {
+                                x2_l = true;
+                                System.out.println("ENTRAMOS2 " + ob);
+                            }
+                        }
+
+                        if (!y1_l) {
+                            if (loc.getLongitude() > lon + y1) {
+                                y1_l = true;
+                                System.out.println("ENTRAMOS3 " + ob);
+                            }
+                        }
+
+                        if (!y2_l) {
+                            if (lon + y2 > loc.getLongitude()) {
+                                y2_l = true;
+                                System.out.println("ENTRAMOS4 " + ob);
+                            }
+                        }
+//3 TRUES Y DOS NOMBRES*/
+                        if ((loc.getLatitude() > lat + x1 || lat + x2 > loc.getLatitude()) && (lat + x2 > loc.getLatitude() && lon + y2 > loc.getLongitude())) {
                             System.out.println("estoy en el rango");
                             prueba.remove();
+
+
+                            ob.estado = true;
 
                             // SE REALIZA VALIDACION
 
                             //Intent in = new Intent(MapsActivity.this, Opcion.class);
                             //startActivity(in);
+                            System.out.println(ob);
                             puedeEvaluar = true;
-                            ob.estado = false;
                             llenarMarker();
                         } else {
-
+                            ob.estado= false;
                         }
                     }
                 }
@@ -816,4 +836,112 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void setInfoDialog(Dialog infoDialog) {
         this.infoDialog = infoDialog;
     }
+
+
+
+    private class AsyncCaller extends AsyncTask<Void, Void, Void>
+    {
+        @Override
+        protected Void doInBackground(Void...voids) {
+
+            myRef2 = database.getReference("users/" + String.valueOf(mAuth.getCurrentUser().getUid()));
+
+            myRef2.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    // This method is called once with the initial value and again
+                    // whenever data at this location is updated.
+                    System.out.println("QUE PASO " + dataSnapshot.getValue());
+                    user = dataSnapshot.getValue(User.class);
+                    System.out.println("" + user.getEdificios_evaluados().size());
+                    //mapFragment.edificios_evaluados = user.getEdificios_evaluados();
+
+                    switch (user.getEdificios_evaluados().size()) {
+                        case (1):
+                            imageView.setBackground(ContextCompat.getDrawable(getBaseContext(), R.drawable.edificios_evaluados0));
+                            break;
+                        case (2):
+                            imageView.setBackground(ContextCompat.getDrawable(getBaseContext(), R.drawable.edificios_evaluados1));
+                            break;
+                        case (3):
+                            imageView.setBackground(ContextCompat.getDrawable(getBaseContext(), R.drawable.edificios_evaluados2));
+                            break;
+                        case (4):
+                            imageView.setBackground(ContextCompat.getDrawable(getBaseContext(), R.drawable.edificios_evaluados3));
+                            break;
+                        case (5):
+                            imageView.setBackground(ContextCompat.getDrawable(getBaseContext(), R.drawable.edificios_evaluados4));
+                            break;
+
+
+                    }
+                    //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError error) {
+                    // Failed to read value
+                    System.out.println("Failed to read value." + error.toException());
+                }
+
+
+            });
+            return null;
+        }
+
+    }
+    private class AsyncMarker extends AsyncTask<Void, Void, Void>
+    {
+        @Override
+        protected Void doInBackground(Void...voids) {
+
+            myRef2 = database.getReference("users/" + String.valueOf(mAuth.getCurrentUser().getUid()));
+
+            myRef2.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    // This method is called once with the initial value and again
+                    // whenever data at this location is updated.
+                    System.out.println("QUE PASO " + dataSnapshot.getValue());
+                    user = dataSnapshot.getValue(User.class);
+                    System.out.println("" + user.getEdificios_evaluados().size());
+                    //mapFragment.edificios_evaluados = user.getEdificios_evaluados();
+
+                    switch (user.getEdificios_evaluados().size()) {
+                        case (1):
+                            imageView.setBackground(ContextCompat.getDrawable(getBaseContext(), R.drawable.edificios_evaluados0));
+                            break;
+                        case (2):
+                            imageView.setBackground(ContextCompat.getDrawable(getBaseContext(), R.drawable.edificios_evaluados1));
+                            break;
+                        case (3):
+                            imageView.setBackground(ContextCompat.getDrawable(getBaseContext(), R.drawable.edificios_evaluados2));
+                            break;
+                        case (4):
+                            imageView.setBackground(ContextCompat.getDrawable(getBaseContext(), R.drawable.edificios_evaluados3));
+                            break;
+                        case (5):
+                            imageView.setBackground(ContextCompat.getDrawable(getBaseContext(), R.drawable.edificios_evaluados4));
+                            break;
+
+
+                    }
+                    //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError error) {
+                    // Failed to read value
+                    System.out.println("Failed to read value." + error.toException());
+                }
+
+
+            });
+            return null;
+        }
+
+    }
 }
+

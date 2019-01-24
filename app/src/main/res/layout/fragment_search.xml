@@ -4,12 +4,41 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".views.fragments.SearchFragment">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:id="@+id/positions_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/green"
+        android:orientation="horizontal"
+>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Edificios"
+            android:paddingTop="10dp"
+            android:paddingLeft="15dp"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/icon_positions"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="15dp"
+            />
+    </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
         android:padding="15dp"
         android:id="@+id/builds"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="15dp"></android.support.v7.widget.RecyclerView>
-
+        android:background="@drawable/top_lines"></android.support.v7.widget.RecyclerView>
+</LinearLayout>
 </FrameLayout>

@@ -6,10 +6,12 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.RequiresApi;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,6 +27,7 @@ import com.access.espol.marco77713.espolaccess.adapter.AccesibilityAdapter;
 import com.access.espol.marco77713.espolaccess.adapter.SearcherAdapter;
 import com.access.espol.marco77713.espolaccess.model.Accesibility;
 import com.access.espol.marco77713.espolaccess.model.Edificio;
+import com.access.espol.marco77713.espolaccess.model.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -77,6 +80,36 @@ public class BuildingActivity extends AppCompatActivity {
                 activeNetwork.isConnectedOrConnecting();
 
         if(isConnected) {
+            new AsyncCaller().execute();
+        }
+        else{
+            Toast.makeText(getBaseContext(), "No tienes acceso a internet, lo necesitas para hacer uso de la app", Toast.LENGTH_LONG).show();
+        }
+        showToolbar(edificio, true);
+    }
+
+    private void setViews() {
+        this.txtResultado = (TextView) findViewById(R.id.resultado_accesibilidad);
+    }
+
+
+    public void  showToolbar(String title, boolean upButton){
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        final Drawable upArrow = getResources().getDrawable(R.drawable.upbutton);
+
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(Html.fromHtml("<font color='#ffffff'></font>"));
+        getSupportActionBar().setHomeAsUpIndicator(upArrow);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(upButton);
+    }
+
+
+    private class AsyncCaller extends AsyncTask<Void, Void, Void>
+    {
+        @Override
+        protected Void doInBackground(Void...voids) {
 
             myRef = database.getReference("edificios/" + edificio);
             myRef.addValueEventListener(new ValueEventListener() {
@@ -109,30 +142,8 @@ public class BuildingActivity extends AppCompatActivity {
                 }
             });
 
+            return null;
         }
-        else{
-            Toast.makeText(getBaseContext(), "No tienes acceso a internet, lo necesitas para hacer uso de la app", Toast.LENGTH_LONG).show();
-        }
-        showToolbar(edificio, true);
+
     }
-
-    private void setViews() {
-        this.txtResultado = (TextView) findViewById(R.id.resultado_accesibilidad);
-    }
-
-
-    public void  showToolbar(String title, boolean upButton){
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-        final Drawable upArrow = getResources().getDrawable(R.drawable.upbutton);
-
-
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(Html.fromHtml("<font color='#ffffff'></font>"));
-        getSupportActionBar().setHomeAsUpIndicator(upArrow);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(upButton);
-    }
-
-
-
 }

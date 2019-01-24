@@ -90,14 +90,14 @@ public class CreateAccountActivity extends AppCompatActivity {
                 String password = passwordcheck.getText().toString();
 
                 if (TextUtils.isEmpty(email)) {
-                    Toast.makeText(getApplicationContext(), "Ingresa correo", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Ingresa correo electrónico", Toast.LENGTH_SHORT).show();
 
                     ahsignup.setEnabled(true);
                     ahsignup.setBackground(getResources().getDrawable(R.drawable.btn_rounded));
                     return;
                 }
                 if (TextUtils.isEmpty(password)) {
-                    Toast.makeText(getApplicationContext(), "Ingresa contraseña", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Ingresa contraseña mayor o igual a 6 caracteres", Toast.LENGTH_SHORT).show();
 
                     ahsignup.setEnabled(true);
                     ahsignup.setBackground(getResources().getDrawable(R.drawable.btn_rounded));

@@ -65,7 +65,19 @@ public class SearcherAdapter extends RecyclerView.Adapter<SearcherAdapter.MyView
 
             }
         });
-        holder.ubicacionEdificio.setText(buildRow.getUbicacionEdificio());
+
+        if(Integer.parseInt(buildRow.getUbicacionEdificio()) == 0) {
+            holder.ubicacionEdificio.setText("No evaluado");
+        }
+        else if(Integer.parseInt(buildRow.getUbicacionEdificio()) == 1) {
+            holder.ubicacionEdificio.setText("Bajo");
+        }
+        else if(Integer.parseInt(buildRow.getUbicacionEdificio()) == 2) {
+            holder.ubicacionEdificio.setText("Medio");
+        }
+        else if(Integer.parseInt(buildRow.getUbicacionEdificio()) == 3) {
+            holder.ubicacionEdificio.setText("Alto");
+        }
     }
 
     @Override

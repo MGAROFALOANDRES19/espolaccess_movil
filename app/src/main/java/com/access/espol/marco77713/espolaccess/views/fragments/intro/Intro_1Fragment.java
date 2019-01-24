@@ -1,4 +1,4 @@
-package com.access.espol.marco77713.espolaccess.views.fragments;
+package com.access.espol.marco77713.espolaccess.views.fragments.intro;
 
 
 import android.os.Bundle;
@@ -12,10 +12,10 @@ import com.access.espol.marco77713.espolaccess.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class EstadisticFragment extends Fragment {
+public class Intro_1Fragment extends Fragment {
 
 
-    public EstadisticFragment() {
+    public Intro_1Fragment() {
         // Required empty public constructor
     }
 
@@ -24,7 +24,7 @@ public class EstadisticFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_estadistic, container, false);
+        return inflater.inflate(R.layout.fragment_intro_1, container, false);
     }
 
 }

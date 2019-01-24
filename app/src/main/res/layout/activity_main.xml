@@ -37,7 +37,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:padding="40dp">
+                android:padding="40dp"
+                android:focusable="true" android:focusableInTouchMode="true">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -56,9 +57,7 @@
                     android:drawableLeft="@drawable/vector_03"
                     android:drawablePadding="@dimen/like_margintop_card"
                     android:hint="@string/correoEspol"
-                    android:inputType="textEmailAddress"
-
-                    />
+                    android:inputType="textEmailAddress" />
 
 
                 <TextView
@@ -79,7 +78,7 @@
                     android:drawableLeft="@drawable/vectores_18"
                     android:drawablePadding="@dimen/like_margintop_card"
                     android:hint="@string/hint_password"
-                    android:inputType="textPassword" />
+                    android:inputType="textPassword"/>
 
                 <RelativeLayout
                     android:layout_width="match_parent"

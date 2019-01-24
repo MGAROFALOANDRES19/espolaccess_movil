@@ -43,7 +43,7 @@ public class SearchFragment extends Fragment  implements SearchView.OnQueryTextL
     private List<Edificio> edificioList = new ArrayList<>();
     private RecyclerView recyclerView;
     private SearcherAdapter sAdapter;
-
+    boolean isConnected;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef = database.getReference("edificios");
 
@@ -63,7 +63,7 @@ public class SearchFragment extends Fragment  implements SearchView.OnQueryTextL
         ConnectivityManager cm = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        boolean isConnected = activeNetwork != null &&
+        isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
 
         if(isConnected) {
@@ -159,7 +159,10 @@ public class SearchFragment extends Fragment  implements SearchView.OnQueryTextL
         }
 
         System.out.println(buildRowsList);
-        sAdapter.updateList(newList);
+        if(isConnected){
+            sAdapter.updateList(newList);
+
+        }
 
         return true;
     }

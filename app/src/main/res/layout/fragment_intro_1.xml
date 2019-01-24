@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".views.fragments.intro.Intro_1Fragment"
+    android:background="@color/backgroundWhite">
+
+    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="1">
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight=".5"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center">
+            <ImageView
+                android:layout_width="200dp"
+                android:layout_height="150dp"
+                android:background="@drawable/logoac"
+                android:layout_marginTop="30dp"
+
+                />
+        </RelativeLayout>
+        <TextView
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:text="La aplicación ha sido realizada por los estudiantes María Baque León y Marco Garófalo Cervantes, de la carrera Lic. Diseño Web y Aplicaciones Multimedia de la Facultad de EDCOM-ESPOL"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal |center_vertical"
+            android:textSize="18sp"
+            android:layout_weight=".5"
+            />
+    </LinearLayout>
+</FrameLayout>

@@ -211,7 +211,7 @@ public class Edificio {
 
         if (this.getResultado_accesibilidad() ==  1){
             for (Accesibility accesibility : accesibilities){
-                accesibility.setIcon(drawablesAccesibles.get(i));
+                accesibility.setIcon(drawablesNoAccesibles.get(i));
                 i++;
             }
             i=0;
@@ -226,7 +226,7 @@ public class Edificio {
         }
         if (this.getResultado_accesibilidad() ==  3){
             for (Accesibility accesibility : accesibilities){
-                accesibility.setIcon(drawablesNoAccesibles.get(i));
+                accesibility.setIcon(drawablesAccesibles.get(i));
                 i++;
             }
             i=0;

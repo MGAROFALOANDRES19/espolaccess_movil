@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
 
                                 } else {
                                     Log.d(TAG, "singInWithEmail:Fail");
-                                    Toast.makeText(MainActivity.this, getString(R.string.failed), Toast.LENGTH_LONG).show();
+                                    Toast.makeText(MainActivity.this, "Credenciales incorrectas, vuelva a intentar", Toast.LENGTH_LONG).show();
                                     ahlogin.setEnabled(true);
                                     ahlogin.setBackground(getResources().getDrawable(R.drawable.btn_rounded));
                                 }

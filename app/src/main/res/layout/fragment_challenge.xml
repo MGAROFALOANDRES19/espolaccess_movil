@@ -3,18 +3,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".views.fragments.ChallengeFragment"
-    android:padding="10dp">
-
+    tools:context=".views.fragments.ChallengeFragment">
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:background="@drawable/winimage"/>
     <RelativeLayout
         android:id="@+id/positions_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/holo_orange_light"
+        android:background="@color/green"
         android:orientation="horizontal"
         android:layout_marginBottom="15dp">
         <TextView
@@ -24,6 +30,8 @@
             android:paddingTop="10dp"
             android:paddingLeft="15dp"
             android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
             />
         <ImageView
             android:layout_width="wrap_content"
@@ -36,8 +44,10 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/positions"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"></android.support.v7.widget.RecyclerView>
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"></android.support.v7.widget.RecyclerView>
     </LinearLayout>
-
+</ScrollView>
 </FrameLayout>
