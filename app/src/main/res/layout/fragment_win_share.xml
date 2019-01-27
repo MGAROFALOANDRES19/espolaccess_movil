@@ -20,12 +20,13 @@
         android:background="@drawable/close_button"
         android:layout_marginTop="15dp"
         android:layout_marginRight="15dp"
+        android:visibility="invisible"
         />
 
     <ImageView
-        android:layout_width="300dp"
-        android:layout_height="320dp"
-        android:background="@drawable/win_image"
+        android:layout_width="270dp"
+        android:layout_height="390dp"
+        android:background="@drawable/getabuild"
         android:layout_gravity="center"
         />
 

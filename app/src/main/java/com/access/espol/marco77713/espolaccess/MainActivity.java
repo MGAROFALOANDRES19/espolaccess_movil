@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
         final boolean isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
 
-
         FirebaseApp.initializeApp(this);
         mAuth = FirebaseAuth.getInstance();
         //check the current user - EVALUA SI ALGUIEN YA ESTA LOGGEADO
@@ -83,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, CreateAccountActivity.class));
             }
         });
+
 
 
 
@@ -156,6 +156,14 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
+
+    }
+
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+        startActivity(new Intent(this, MainActivity.class));
+        finish();
 
     }
 

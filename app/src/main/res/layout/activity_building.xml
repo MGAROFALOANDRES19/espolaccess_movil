@@ -16,13 +16,14 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="0.6">
+            android:layout_weight="0.6"
+            android:background="@android:color/holo_orange_light">
             <ImageView
                 android:id="@+id/logo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:background="@drawable/app7_14"
+                android:background="@drawable/fiec_png"
                 android:layout_alignParentBottom="true"
                 />
             <TextView
@@ -30,7 +31,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/editTextColorBlue"
-                android:textColor="@android:color/black"
+                android:textColor="@android:color/white"
                 android:textSize="20sp"
                 android:paddingLeft="15dp"
                 android:gravity="bottom|center"

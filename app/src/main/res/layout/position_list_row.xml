@@ -32,7 +32,8 @@
             android:paddingTop="10dp"
             android:textSize="15sp"
             android:layout_toRightOf="@+id/avatar"
-            android:layout_marginLeft="20dp"/>
+            android:layout_marginLeft="20dp"
+            android:maxLength="22"/>
 
     <TextView
         android:id="@+id/puntos"

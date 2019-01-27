@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 
 import com.access.espol.marco77713.espolaccess.MainActivity;
@@ -39,6 +40,7 @@ int contIntro = 0;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_introduction);
 
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         this.setViews();
         this.setEvents();
@@ -142,6 +144,15 @@ System.out.println(btnJump);
                 .addToBackStack(null).commit();
     }
 
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+        startActivity(new Intent(this, MainActivity.class));
+        finish();
+
+    }
+
+
     public void jumpIntro(View view) {
         this.setEnabled(this.btnJump);
         if (view.getTag().equals("Saltar")){
@@ -188,12 +199,12 @@ System.out.println(btnJump);
         }
         else if (contIntro == 3){
 
-            this.setFragmentIntro(intro3Fragment, "Anterior");
+            this.setFragmentIntro(intro4Fragment, "Anterior");
 
         }
         else if (contIntro == 4){
 
-            this.setFragmentIntro(intro4Fragment, "Anterior");
+            this.setFragmentIntro(intro3Fragment, "Anterior");
             this.btnNext.setText("Listo");
             this.btnNext.setTag("Listo");
         }

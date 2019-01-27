@@ -35,6 +35,7 @@ public class WinShareFragment extends Fragment {
             @Override
             public void onClick(View v)
             {
+
                 getActivity().finish();
             }
         });

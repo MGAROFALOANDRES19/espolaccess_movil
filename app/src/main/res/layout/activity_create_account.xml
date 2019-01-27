@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".views.CreateAccountActivity">
+    tools:context=".views.CreateAccountActivity"
+    android:background="@color/colorPrimary">
 
     <include layout="@layout/actionbar_toolbar"/>
 
@@ -14,9 +15,12 @@
         android:fillViewport="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:padding="@dimen/activity_vertical_margin"
             android:orientation="vertical">
 
@@ -54,15 +58,6 @@
                     android:inputType="textPassword"
                     android:drawableLeft="@drawable/vectores_18"
                     android:drawablePadding="10dp"/>
-            <Button
-                android:id="@+id/btn_signup"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/btn_join"
-                android:background="@drawable/btn_rounded"
-                android:textColor="@color/colorPrimary"
-                android:textAllCaps="false"
-                />
             <TextView
                 android:layout_marginTop="30dp"
                 android:id="@+id/login_page"
@@ -72,9 +67,20 @@
                 android:gravity="center"
                 android:text="¿Ya tienes cuenta? Iniciar sesión"
                 android:textSize="16dip"
-                android:background="@drawable/text_lines"
+                android:background="@drawable/text_lines2"
                 android:layout_gravity="center"/>
         </LinearLayout>
+            <Button
+                android:id="@+id/btn_signup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/btn_join"
+                android:background="@drawable/btn_rounded"
+                android:textColor="@color/colorPrimary"
+                android:textAllCaps="false"
+                android:layout_alignParentBottom="true"
+                />
+        </RelativeLayout>
     </ScrollView>
     <ProgressBar
         android:id="@+id/progressBar"

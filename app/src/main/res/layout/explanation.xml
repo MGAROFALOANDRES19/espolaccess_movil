@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+<com.synnapps.carouselview.CarouselView
+    android:id="@+id/explanation_carousel"
+    android:layout_width="match_parent"
+    android:layout_height="350dp"
+    android:layout_centerInParent="true"
+    app:fillColor="#FFFFFFFF"
+    app:pageColor="#00000000"
+    app:radius="6dp"
+    app:slideInterval="3000"
+    app:strokeColor="#FF777777"
+    app:strokeWidth="1dp"
+    >
+    <Button
+        android:id="@+id/btn_closeExplanation"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:background="@drawable/close_button"
+        android:layout_gravity="end"
+        android:layout_marginRight="10dp"/>
+
+</com.synnapps.carouselview.CarouselView>
+</RelativeLayout>

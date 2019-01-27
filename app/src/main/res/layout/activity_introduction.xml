@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/btn_rounded"
             android:textAllCaps="false"
-            android:text="@string/next"
+            android:text="Siguiente"
             android:tag="Siguiente"
             android:textColor="@android:color/white"
             android:onClick="nextSlide"

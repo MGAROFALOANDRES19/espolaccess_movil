@@ -66,7 +66,7 @@ public class CreateAccountActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(Html.fromHtml("<font color='#333333'>Crea una cuenta</font>"));
+        getSupportActionBar().setTitle(Html.fromHtml("<font color='#ffffff'>Crea una cuenta</font>"));
         getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.upbutton));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

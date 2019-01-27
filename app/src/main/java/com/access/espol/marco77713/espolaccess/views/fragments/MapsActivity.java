@@ -31,6 +31,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
@@ -73,9 +74,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private GoogleMap mMap;
     private Marker prueba; //*
-    double x1=-0.00002;//solo cambiar penultimo digito 115 => 125 OJO 195
-    double x2= 0.00002;
-    double y1=-0.00001;
+    double x1=-0.00020;//solo cambiar penultimo digito 115 => 125 OJO 195
+    double x2= 0.00020;
+    double y1=-0.00020;
     double y2= 0.00020;
     private ArrayList<Objetos> listaobj = new ArrayList<Objetos>(); //*
     public ArrayList<String> edificios_evaluados = new ArrayList<>(); //*
@@ -159,7 +160,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             miUbicacion();
 
 /*      Toast toast1=Toast.makeText(getApplicationContext(), "Prueba: "+listaobj, Toast.LENGTH_SHORT);
-        toast1.setGravity(Gravity.CENTER,10,10);
+        toast1.setGravity(Gravity.CENTER,10,10);/
         toast1.show();
 */        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
             int estado = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
@@ -200,9 +201,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         this.getImageView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setFragment(getChallengeFragment(), Html.fromHtml("<font color='#ffffff'>Premios</font>"), new ColorDrawable(getResources().getColor(R.color.editTextColorBlue)));
-                startActivity(new Intent(MapsActivity.this, IntroductionActivity.class));
-                finish();
+                //setFragment(getChallengeFragment(), Html.fromHtml("<font color='#ffffff'>Premios</font>"), new ColorDrawable(getResources().getColor(R.color.editTextColorBlue)));
+                bottomBar.setSelectedItemId(R.id.challenge);
+
+                //startActivity(new Intent(MapsActivity.this, IntroductionActivity.class));
+               // finish();
             }
         });
 
@@ -283,15 +286,23 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+        bottomBar.setSelectedItemId(R.id.maps);
+    }
+
     private void llenarUbicacion(){
 
         for(Edificio edificio : edificioList){
             listaobj.add(new Objetos(edificio.getNombre(),edificio.getLatitud(),edificio.getLongitud(),false,edificio.getResultado_accesibilidad()));
-        }
 
+        }
+        System.out.println(edificioList);
 
         //listaobj.add(new Objetos("Ubicacion B",-2.2772470,-79.8914440,true,"nina"));
     }
+
     private void llenarMarker(){
         int b=0;
         LatLng a;
@@ -318,6 +329,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         }
     }
+
     private void animarEspol() {
         LatLng espol = new LatLng(-2.1518811021216453, -79.95260821832615);
 
@@ -339,15 +351,34 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             public boolean onMarkerClick(final Marker m) {
 
                 Button btn1, btn2;
+                TextView textView;
                 myDialog.setContentView(see_or_evaluate);
                 btn1 = (Button) myDialog.findViewById(R.id.see);
                 btn2 = (Button) myDialog.findViewById(R.id.evaluate);
+                textView = (TextView) myDialog.findViewById(R.id.notEvaluated);
+
+                for (Edificio edificio : edificioList){
+                    if(edificio.getNombre().equals(m.getTitle())){
+                        if (edificio.getResultado_accesibilidad() == 0){
+                            textView.setText("Edificio no evaluado");
+                        }
+                        else if (edificio.getResultado_accesibilidad() == 1){
+                            textView.setText("Edificio no accesible");
+                        }
+                        else if (edificio.getResultado_accesibilidad() == 2){
+                            textView.setText("Edificio medianamente accesible");
+                        }
+                        else if (edificio.getResultado_accesibilidad() == 0){
+                            textView.setText("Edificio accesible");
+                        }
+                    }
+                }
 
                 if (user.getEdificios_evaluados().contains(m.getTitle())){
                     btn2.setEnabled(false);
                     btn2.setText("Ya evaluado");
                     btn2.setTextColor(Color.parseColor("#7f7b6d"));
-                    btn2.setBackground(getResources().getDrawable(R.drawable.btn_rounded_pushed));
+                    btn2.setBackgroundColor(Color.parseColor("#333333"));
 
                 }
 
@@ -381,16 +412,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         for(Objetos ob:listaobj){
                             if (ob.getNombre().equals(m.getTitle())){
                                 if(ob.estado){
-                                    startActivity(intent);
+startActivity(intent);
+System.out.println("POR QUE TENGO DOS ACTIVITIES");
                                     x1_l = false;
                                     x2_l = false;
                                     y1_l = false;
                                     y2_l = false;
                                     ob.estado = false;
                                     puedeEvaluar = false;
+                                    break;
                                 }
                                 else{
-                                    Toast.makeText(getBaseContext(), "Acercate a la ubicacion para evaluar", Toast.LENGTH_LONG).show();
+                                    ob.estado=false;
+                                    Toast.makeText(getBaseContext(), "Acércate a la ubicación para evaluar", Toast.LENGTH_LONG).show();
                                 }
 
                             }
@@ -408,6 +442,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
     }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -435,7 +470,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 for(Objetos ob:listaobj) {
 
                     dir = new LatLng(ob.latitud, ob.longitud);
-                    if (!ob.estado && !puedeEvaluar) {
+                    if (!ob.estado/* && !puedeEvaluar*/) {
                         double lat = dir.latitude;
                         double lon = dir.longitude; //Metodo para radios cruzados
 
@@ -470,7 +505,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             }
                         }
 //3 TRUES Y DOS NOMBRES*/
-                        if ((loc.getLatitude() > lat + x1 || lat + x2 > loc.getLatitude()) && (lat + x2 > loc.getLatitude() && lon + y2 > loc.getLongitude())) {
+                        if ((loc.getLatitude() > lat + x1 && lat + x2 > loc.getLatitude()) && (lat + x2 > loc.getLatitude() && lon + y2 > loc.getLongitude())) {
                             System.out.println("estoy en el rango");
                             prueba.remove();
 
@@ -553,6 +588,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         public void onProviderEnabled(String provider) {
             mensaje = "GPS ACTIVADO";
             Mensaje();
+            Intent intent = new Intent(getBaseContext(), MapsActivity.class);
+            intent.setAction(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_LAUNCHER);
+            startActivity(intent);
         }
 
         @Override

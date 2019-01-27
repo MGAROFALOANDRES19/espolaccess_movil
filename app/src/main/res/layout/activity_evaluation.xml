@@ -5,12 +5,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".views.EvaluationActivity"
+    android:background="@drawable/background_for_evaluation"
     >
+
+    <ImageView
+        android:id="@+id/building"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/fiec_png"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="100dp"/>
     <FrameLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 <LinearLayout
+    android:id="@+id/buttons_evaluation"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:weightSum="1"
@@ -22,7 +32,7 @@
         android:tag="Cancelar"
         android:layout_gravity="bottom"
         android:onClick="prevAction"
-        android:text="@string/cancel"
+        android:text="Cancelar"
         android:textColor="@android:color/white"
         android:background="@drawable/btn_rounded"
         android:layout_weight=".5"
@@ -38,7 +48,7 @@
         android:layout_gravity="bottom|right"
         android:tag="Iniciar"
         android:onClick="nextAction"
-        android:text="@string/next"
+        android:text="Siguiente"
         android:background="@drawable/btn_rounded"
         android:textColor="@android:color/white"
         android:layout_weight=".5"

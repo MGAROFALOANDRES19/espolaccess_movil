@@ -26,7 +26,7 @@ public class EstadisticActivity extends AppCompatActivity {
 
     int edificios_evaluados;
     String nombre;
-    ImageView imageView;
+    ImageView imageView, imageViewBar;
     TextView textView;
 
     @Override
@@ -46,12 +46,20 @@ public class EstadisticActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(Html.fromHtml("<font color='#ffffff'> Estadísticas de " + nombre  + "</font>"));
 
         imageView = (ImageView) findViewById(R.id.percentage_circle);
+        imageViewBar = (ImageView) findViewById(R.id.bar_percentage);
         textView = (TextView) findViewById(R.id.edificios_evaluados_number);
 
         textView.setText("Edificios evaluados: " + edificios_evaluados);
 
         new AsyncCaller().execute();
     }
+
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+finish();
+    }
+
 
     private class AsyncCaller extends AsyncTask<Void, Void, Drawable>
     {
@@ -60,7 +68,7 @@ public class EstadisticActivity extends AppCompatActivity {
         private DatabaseReference myRef;
         int total_edificios;
         int percentage;
-        Drawable drawable;
+        Drawable drawable, drawable2;
 
         @Override
         protected Drawable doInBackground(Void...voids) {
@@ -80,39 +88,51 @@ public class EstadisticActivity extends AppCompatActivity {
                     switch (percentage){
                         case (0):
                             drawable = getResources().getDrawable(R.drawable.percentage_00_circle);
+                            drawable2 = getResources().getDrawable(R.drawable.percentage_0_bar);
                             break;
                         case (10):
                             drawable = getResources().getDrawable(R.drawable.percentage_10_circle);
+                            drawable2 = getResources().getDrawable(R.drawable.percentage_10_bar);
                             break;
                         case (20):
                             drawable = getResources().getDrawable(R.drawable.percentage_20_circle);
+                            drawable2 = getResources().getDrawable(R.drawable.percentage_20_bar);
                             break;
                         case (30):
                             drawable = getResources().getDrawable(R.drawable.percentage_30_circle);
+                            drawable2 = getResources().getDrawable(R.drawable.percentage_30_bar);
                             break;
                         case (40):
                             drawable = getResources().getDrawable(R.drawable.percentage_40_circle);
+                            drawable2 = getResources().getDrawable(R.drawable.percentage_40_bar);
                             break;
                         case (50):
                             drawable = getResources().getDrawable(R.drawable.percentage_50_circle);
+                            drawable2 = getResources().getDrawable(R.drawable.percentage_50_bar);
                             break;
                         case (60):
                             drawable = getResources().getDrawable(R.drawable.percentage_60_circle);
+                            drawable2 = getResources().getDrawable(R.drawable.percentage_60_bar);
                             break;
                         case (70):
                             drawable = getResources().getDrawable(R.drawable.percentage_70_circle);
+                            drawable2 = getResources().getDrawable(R.drawable.percentage_70_bar);
                             break;
                         case (80):
                             drawable = getResources().getDrawable(R.drawable.percentage_80_circle);
+                            drawable2 = getResources().getDrawable(R.drawable.percentage_80_bar);
                             break;
                         case (90):
                             drawable = getResources().getDrawable(R.drawable.percentage_90_circle);
+                            drawable2 = getResources().getDrawable(R.drawable.percentage_90_bar);
                             break;
                         case (100):
                             drawable = getResources().getDrawable(R.drawable.percentage_90_circle);
+                            drawable2 = getResources().getDrawable(R.drawable.percentage_100_bar);
                             break;
                     }
 
+                    imageView.setBackground(drawable);
                     imageView.setBackground(drawable);
 
                 }

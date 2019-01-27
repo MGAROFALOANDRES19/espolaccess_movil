@@ -16,8 +16,11 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.access.espol.marco77713.espolaccess.R;
@@ -66,6 +69,8 @@ public class EvaluationActivity extends AppCompatActivity {
     FrameLayout frameLayout;
     Drawable drawable;
 
+    ImageView imageBuild;
+
     ArrayList<Integer> respuestas = new ArrayList<Integer>();
 
     int i;
@@ -86,14 +91,13 @@ public class EvaluationActivity extends AppCompatActivity {
         System.out.println("Esto es lo que llega " + i);
         user_puntos = intent.getIntExtra("user_puntos", 0);
         frameLayout = (FrameLayout) findViewById(R.id.container);
+        imageBuild = (ImageView) findViewById(R.id.building);
 
-        imageBuildings.put("EDCOM", getResources().getDrawable(R.drawable.edcom2_start_evaluation));
-        imageBuildings.put("FIEC", getResources().getDrawable(R.drawable.fiec_start_evaluation));
-        imageBuildings.put("EDCOM_background", getResources().getDrawable(R.drawable.edcom_background));
-        imageBuildings.put("FIEC_background", getResources().getDrawable(R.drawable.fiec_background));
+        imageBuildings.put("EDCOM", getResources().getDrawable(R.drawable.edcom_png));
+        imageBuildings.put("FIEC", getResources().getDrawable(R.drawable.fiec_png));
+        imageBuildings.put("UBEP", getResources().getDrawable(R.drawable.ubep_png));
 
-        frameLayout.setBackground(imageBuildings.get(edificio));
-
+        imageBuild.setBackground(imageBuildings.get(edificio));
         StratFragment stratFragment = new StratFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.container, stratFragment)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
@@ -121,7 +125,6 @@ public class EvaluationActivity extends AppCompatActivity {
                     j++;
 
                 }
-            frameLayout.setBackground(imageBuildings.get(edificio+"_background"));
 
             }
 
@@ -138,12 +141,19 @@ public class EvaluationActivity extends AppCompatActivity {
 
         if(btnPrev.getTag().equals("Cancelar")){
             System.out.println("PILAS");
-            this.finish();
             btnPrev.setBackground(getResources().getDrawable(R.drawable.btn_rounded_pushed));
+            finish();
             //startActivity(new Intent(EvaluationActivity.this, MapsActivity.class));
         }
 
     }
+
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+finish();
+    }
+
 
     public void nextAction(View view) {
 
@@ -160,7 +170,10 @@ public class EvaluationActivity extends AppCompatActivity {
                 btnNext.setBackground(getResources().getDrawable(R.drawable.btn_rounded_pushed));
                 btnNext.setTag("Next");
                 btnNext.setEnabled(false);
-                btnPrev.setVisibility(View.INVISIBLE);
+
+                btnPrev.setVisibility(View.GONE);
+                btnNext.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
                 System.out.println("Numero de preguntas: " + questionFragments.size());
                 getSupportFragmentManager().beginTransaction().replace(R.id.container, questionFragments.get(contPreguntas))
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
@@ -229,15 +242,18 @@ public class EvaluationActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().replace(R.id.container, winShareFragment)
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                     .addToBackStack(null).commit();
-            btnNext.setText("");
-            btnNext.setBackground(getResources().getDrawable(R.drawable.social_button));
+            btnNext.setText("CERRAR");
 
-            btnNext.setTag("share");
+            btnNext.setTag("cerrar");
+            btnNext.setEnabled(true);
         }
 
         else if (btnNext.getTag().equals("share")){
             Toast toast=Toast.makeText(this, "SE COMPARTIRÁ EN UNA RED SOCIAL #SoyIncluyente",Toast.LENGTH_LONG);
             toast.show();
+        }
+        else if (btnNext.getTag().equals("cerrar")){
+            finish();
         }
     }
 

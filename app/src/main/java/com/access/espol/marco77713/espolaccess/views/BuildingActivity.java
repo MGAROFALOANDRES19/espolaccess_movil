@@ -67,8 +67,9 @@ public class BuildingActivity extends AppCompatActivity {
         this.setViews();
 
 
-        imageBuildings.put("EDCOM", getResources().getDrawable(R.drawable.edcom_building));
-        imageBuildings.put("FIEC", getResources().getDrawable(R.drawable.fiec_building));
+        imageBuildings.put("EDCOM", getResources().getDrawable(R.drawable.edcom_png));
+        imageBuildings.put("FIEC", getResources().getDrawable(R.drawable.fiec_png));
+        imageBuildings.put("UBEP", getResources().getDrawable(R.drawable.ubep_png));
 
         building.setBackground(imageBuildings.get(edificio));
 
@@ -90,6 +91,12 @@ public class BuildingActivity extends AppCompatActivity {
 
     private void setViews() {
         this.txtResultado = (TextView) findViewById(R.id.resultado_accesibilidad);
+    }
+
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+ finish();
     }
 
 

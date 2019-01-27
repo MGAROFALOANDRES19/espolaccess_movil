@@ -7,8 +7,8 @@ android {
         applicationId "com.access.espol.marco77713.espolaccess"
         minSdkVersion 17
         targetSdkVersion 28
-        versionCode 13
-        versionName "13.0"
+        versionCode 16
+        versionName "16.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true

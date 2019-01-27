@@ -147,6 +147,18 @@ public class ProfileFragment extends Fragment {
         });
 
         final Button btnSave = (Button) view.findViewById(R.id.save);
+
+
+        personalizacion.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                btnSave.setEnabled(true);
+                btnSave.setTextColor(getResources().getColor(R.color.white));
+                btnSave.setBackground(getResources().getDrawable(R.drawable.btn_rounded));
+
+            }
+        });
+
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -179,11 +191,10 @@ public class ProfileFragment extends Fragment {
                     userClass.setPersonalizacion(personalization);
                     System.out.println(userClass);
                     myRef.child("users").child(userID).setValue(userClass);
-                    toastMessage("New Information has been saved.");
-                    email.setText("");
+                    toastMessage("Nueva información añadida.");
 
                 }else{
-                    toastMessage("Fill out all the fields");
+                    toastMessage("Cambios necesarios");
                 }
             }
             else
